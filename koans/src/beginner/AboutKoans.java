@@ -7,13 +7,13 @@ import com.sandwich.koan.Koan;
 public class AboutKoans {
 
 	@Koan
-	public void findAboutKoansFile(){
-		fail("delete this line");
+	public void findAboutKoansFile() {
+		//fail("delete this line");
 	}
 	
 	@Koan
 	public void definitionOfKoanCompletion(){
-		boolean koanIsComplete = false;
+		boolean koanIsComplete = true;
 		if(!koanIsComplete){
 			fail("what if koanIsComplete was true?");
 		}
