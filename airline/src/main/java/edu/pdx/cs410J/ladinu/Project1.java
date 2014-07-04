@@ -24,11 +24,11 @@ public class Project1 {
 
   public static void main(String[] args) {
     List<String> commandLineArgs = Arrays.asList(args);
-    printUsageAndExitWithZeroIfReadmeArgGiven(commandLineArgs);
-    ifNoCommandLineArgumentsExitWithOne(commandLineArgs);
+    IfReadmeArgGivenThenPrintUsageAndExitWithZero(commandLineArgs);
+    ifNoCommandLineArgumentsGivenThenExitWithOne(commandLineArgs);
   }
 
-  private static void ifNoCommandLineArgumentsExitWithOne(List<String> commandLineArgs) {
+  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> commandLineArgs) {
     System.err.println("Missing command line arguments");
     for (String arg : commandLineArgs) {
       System.out.println(arg);
@@ -36,7 +36,7 @@ public class Project1 {
     exitWithOne();
   }
 
-  private static void printUsageAndExitWithZeroIfReadmeArgGiven(List<String> commandLineArgs) {
+  private static void IfReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> commandLineArgs) {
     if (commandLineArgs.contains("-README")) {
       printUsage();
       exitWithZero();
