@@ -48,13 +48,14 @@ public class Project1Test extends InvokeMainTestCase {
     assertError(result, "Invalid number of arguments for -print option");
   }
 
-  @Ignore
   @Test
-  public void makeSurePrintOptionCannotBeAddedAnyWhere() {
+  public void testInvalidOption() {
+    MainMethodResult result = invokeMain("-invalidOption", "-print");
+    assertError(result, "Invalid option");
   }
 
   private void assertError(MainMethodResult result, String err) {
-    assertTrue(result.getErr().contains(err));
+    assertEquals(result.getErr(), err+"\n");
     assertExitCodeIsOne(result);
   }
 

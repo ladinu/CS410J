@@ -27,13 +27,22 @@ public class Project1 {
     ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
     ifReadmeArgGivenThenPrintUsageAndExitWithZero(argsList);
     ifNoCommandLineArgumentsGivenThenExitWithOne(argsList);
-
     handlePrintOption(argsList);
+    handleInvalidOption();
+  }
+
+  private static void handleInvalidOption() {
+    printInvalidOptionMessage();
+    exitWithOne();
+  }
+
+  private static void printInvalidOptionMessage() {
+    System.err.println("Invalid option");
   }
 
   private static void handlePrintOption(ArrayList<String> argsList) {
-    if (argsList.contains("-print")) {
-      argsList.remove("-print");
+    if (argsList.get(0).equals("-print")) {
+      argsList.remove(0);
       checkIfValidNumberOfArgumentsGivenForPrintOption(argsList);
     }
   }
