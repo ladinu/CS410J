@@ -1,5 +1,6 @@
 package edu.pdx.cs410J.ladinu;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,24 +24,47 @@ public class Project1 {
       "  Date and time should be in the format: mm/dd/yyyy hh:mm";
 
   public static void main(String[] args) {
-    List<String> commandLineArgs = Arrays.asList(args);
-    IfReadmeArgGivenThenPrintUsageAndExitWithZero(commandLineArgs);
-    ifNoCommandLineArgumentsGivenThenExitWithOne(commandLineArgs);
+    ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
+    ifReadmeArgGivenThenPrintUsageAndExitWithZero(argsList);
+    ifNoCommandLineArgumentsGivenThenExitWithOne(argsList);
+
+    handlePrintOption(argsList);
   }
 
-  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> commandLineArgs) {
-    System.err.println("Missing command line arguments");
-    for (String arg : commandLineArgs) {
-      System.out.println(arg);
+  private static void handlePrintOption(ArrayList<String> argsList) {
+    if (argsList.contains("-print")) {
+      argsList.remove("-print");
+      checkIfValidNumberOfArgumentsGivenForPrintOption(argsList);
     }
-    exitWithOne();
   }
 
-  private static void IfReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> commandLineArgs) {
-    if (commandLineArgs.contains("-README")) {
+  private static void checkIfValidNumberOfArgumentsGivenForPrintOption(ArrayList<String> argsList) {
+    if (argsList.size() != 8) {
+      printInvalidNumberOfArgumentsForPrintOptionMessage();
+      exitWithOne();
+    }
+  }
+
+  private static void printInvalidNumberOfArgumentsForPrintOptionMessage() {
+    System.err.println("Invalid number of arguments for -print option");
+  }
+
+  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
+    if (argsList.isEmpty()) {
+      printMissingCommanLineArgumentsMessage();
+      exitWithOne();
+    }
+  }
+
+  private static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
+    if (argsList.contains("-README")) {
       printUsage();
       exitWithZero();
     }
+  }
+
+  private static void printMissingCommanLineArgumentsMessage() {
+    System.err.println("Missing command line arguments");
   }
 
   private static void printUsage() {

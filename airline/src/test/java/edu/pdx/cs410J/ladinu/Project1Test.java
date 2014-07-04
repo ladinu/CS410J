@@ -1,5 +1,7 @@
 package edu.pdx.cs410J.ladinu;
 
+import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -29,10 +31,29 @@ public class Project1Test extends InvokeMainTestCase {
   }
 
   @Test
-  public void shouldPrintUsageWhenReadmeOptionIsGiven() {
+  public void shouldPrintUsageToStdOutAndExitWithZeroWhenReadmeOptionIsGiven() {
     MainMethodResult result = invokeMain("-README");
     assertTrue(result.getOut().contains(Project1.USAGE));
     assertExitCodeIsZero(result);
+  }
+
+  @Test
+  public void printOptionShouldNotHaveMoreThanEightArguments() {
+    MainMethodResult result = invokeMain("-print", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+    assertTrue(result.getErr().contains("Invalid number of arguments for -print option"));
+    assertExitCodeIsOne(result);
+  }
+
+  @Test
+  public void printOptionShouldNotHaveLessThanEightArguments() {
+    MainMethodResult result = invokeMain("-print", "1", "2", "3", "4", "5", "6", "7");
+    assertTrue(result.getErr().contains("Invalid number of arguments for -print option"));
+    assertExitCodeIsOne(result);
+  }
+
+  @Ignore
+  @Test
+  public void makeSurePrintOptionCannotBeAddedAnyWhere() {
   }
 
   private void assertExitCodeIsZero(MainMethodResult result) {
