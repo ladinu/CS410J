@@ -43,9 +43,4 @@ public class Flight extends AbstractFlight {
   public String getArrivalString() {
     return null;
   }
-
-  @Override
-  public String toString() {
-    return super.toString();
-  }
 }
