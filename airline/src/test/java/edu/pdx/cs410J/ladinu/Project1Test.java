@@ -76,6 +76,11 @@ public class Project1Test extends InvokeMainTestCase {
     assertFalse(Project1.validate_IATA_AirportCode("PDXL"));
     assertFalse(Project1.validate_IATA_AirportCode("PD1"));
   }
+  
+  @Test
+  public void shouldParseValidDateTimes() {
+
+  }
 
   @Ignore
   @Test
