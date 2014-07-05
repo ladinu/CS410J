@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import edu.pdx.cs410J.InvokeMainTestCase;
 import static junit.framework.Assert.assertEquals;
@@ -61,6 +62,24 @@ public class Project1Test extends InvokeMainTestCase {
   public void optionsAreOptional() {
     MainMethodResult result = invokeMain("Alaska A32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
     assertEmptyOutput(result);
+  }
+  
+  @Test
+  public void shouldValidateIATACode() {
+    assertTrue(Project1.validate_IATA_AirportCode("PDX"));
+    assertTrue(Project1.validate_IATA_AirportCode("pdx"));
+    assertTrue(Project1.validate_IATA_AirportCode("PdX"));
+
+    assertFalse(Project1.validate_IATA_AirportCode(""));
+    assertFalse(Project1.validate_IATA_AirportCode("p"));
+    assertFalse(Project1.validate_IATA_AirportCode("pd"));
+    assertFalse(Project1.validate_IATA_AirportCode("PDXL"));
+    assertFalse(Project1.validate_IATA_AirportCode("PD1"));
+  }
+
+  @Ignore
+  @Test
+  public void containVlidNumberOfArgumentsPrintMessagesRegardingPrint() {
   }
 
   private void assertEmptyOutput(MainMethodResult result) {

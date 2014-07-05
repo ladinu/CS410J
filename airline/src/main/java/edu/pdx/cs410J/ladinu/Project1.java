@@ -41,8 +41,12 @@ public class Project1 {
   }
 
   private static void handleArguments(ArrayList<String> argsList) {
-    checkParamsContainValidNumberOfArguments(argsList);
+    containValidNumberOfArguments(argsList);
     exitWithZero();
+  }
+
+  public static boolean validate_IATA_AirportCode(String iataCode) {
+    return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
   }
 
   private static void handleInvalidOption(ArrayList<String> argsList) {
@@ -78,7 +82,7 @@ public class Project1 {
     }
   }
 
-  private static void checkParamsContainValidNumberOfArguments(ArrayList<String> argsList) {
+  private static void containValidNumberOfArguments(ArrayList<String> argsList) {
     if (argsList.size() != 8) {
       printInvalidNumberOfArgumentsForPrintOptionMessage();
       exitWithOne();
