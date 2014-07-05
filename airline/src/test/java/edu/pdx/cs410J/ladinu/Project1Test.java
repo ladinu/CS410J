@@ -17,7 +17,10 @@ public class Project1Test extends InvokeMainTestCase {
    * Invokes the main method of {@link Project1} with the given arguments.
    */
   private MainMethodResult invokeMain(String... args) {
-    return invokeMain( Project1.class, args );
+    return invokeMain( Project1.class, args);
+  }
+  private MainMethodResult invokeMain(String args) {
+    return invokeMain( Project1.class, args.split(" "));
   }
 
   /**
@@ -38,23 +41,36 @@ public class Project1Test extends InvokeMainTestCase {
 
   @Test
   public void printOptionShouldNotHaveMoreThanEightArguments() {
-    MainMethodResult result = invokeMain("-print", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+    MainMethodResult result = invokeMain("-print 1 2 3 4 5 6 7 8 9");
     assertError(result, "Invalid number of arguments for -print option");
   }
 
   @Test
   public void printOptionShouldNotHaveLessThanEightArguments() {
-    MainMethodResult result = invokeMain("-print", "1", "2", "3", "4", "5", "6", "7");
+    MainMethodResult result = invokeMain("-print 1 2 3 4 5 6 7");
     assertError(result, "Invalid number of arguments for -print option");
   }
 
   @Test
   public void testInvalidOption() {
-    MainMethodResult result = invokeMain("-invalidOption", "-print");
+    MainMethodResult result = invokeMain("-invalidOption");
     assertError(result, "Invalid option");
   }
 
+  @Test
+  public void optionsAreOptional() {
+    MainMethodResult result = invokeMain("Alaska A32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    assertEmptyOutput(result);
+  }
+
+  private void assertEmptyOutput(MainMethodResult result) {
+    assertExitCodeIsZero(result);
+    assertEquals(result.getOut(), "");
+    assertEquals(result.getErr(), "");
+  }
+
   private void assertError(MainMethodResult result, String err) {
+    assertEquals(result.getOut(), "");
     assertEquals(result.getErr(), err+"\n");
     assertExitCodeIsOne(result);
   }

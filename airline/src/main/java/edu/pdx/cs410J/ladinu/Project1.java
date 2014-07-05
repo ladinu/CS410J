@@ -23,17 +23,48 @@ public class Project1 {
       "    -README               Prints a README for this project and exits\n" +
       "  Date and time should be in the format: mm/dd/yyyy hh:mm";
 
+  public static final String[] OPTIONS = new String[]{"-print", "-README"};
+
   public static void main(String[] args) {
     ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
     ifReadmeArgGivenThenPrintUsageAndExitWithZero(argsList);
     ifNoCommandLineArgumentsGivenThenExitWithOne(argsList);
-    handlePrintOption(argsList);
-    handleInvalidOption();
+    handleOptions(argsList);
+    handleArguments(argsList);
   }
 
-  private static void handleInvalidOption() {
-    printInvalidOptionMessage();
-    exitWithOne();
+  private static void handleOptions(ArrayList<String> argsList) {
+    if (isOption(argsList)) {
+      handleInvalidOption(argsList);
+      handlePrintOption(argsList);
+    }
+  }
+
+  private static void handleArguments(ArrayList<String> argsList) {
+    checkParamsContainValidNumberOfArguments(argsList);
+    exitWithZero();
+  }
+
+  private static void handleInvalidOption(ArrayList<String> argsList) {
+    if (!containValidOption(argsList)) {
+      printInvalidOptionMessage();
+      exitWithOne();
+    }
+  }
+
+  private static boolean containValidOption(ArrayList<String> argsList) {
+    String option = argsList.get(0);
+    boolean validOption = false;
+    for ( String opt : OPTIONS) {
+      if (option.equals(opt)) {
+        validOption = true;
+      }
+    }
+    return validOption;
+  }
+
+  private static boolean isOption(ArrayList<String> arrayList) {
+    return arrayList.get(0).startsWith("-");
   }
 
   private static void printInvalidOptionMessage() {
@@ -43,11 +74,11 @@ public class Project1 {
   private static void handlePrintOption(ArrayList<String> argsList) {
     if (argsList.get(0).equals("-print")) {
       argsList.remove(0);
-      checkIfValidNumberOfArgumentsGivenForPrintOption(argsList);
+      handleArguments(argsList);
     }
   }
 
-  private static void checkIfValidNumberOfArgumentsGivenForPrintOption(ArrayList<String> argsList) {
+  private static void checkParamsContainValidNumberOfArguments(ArrayList<String> argsList) {
     if (argsList.size() != 8) {
       printInvalidNumberOfArgumentsForPrintOptionMessage();
       exitWithOne();
