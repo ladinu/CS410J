@@ -1,8 +1,9 @@
 package edu.pdx.cs410J.ladinu;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * The main class for the CS410J airline Project
@@ -33,20 +34,36 @@ public class Project1 {
     handleArguments(argsList);
   }
 
+  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
+    if (argsList.isEmpty()) {
+      printMissingCommanLineArgumentsMessage();
+      exitWithOne();
+    }
+  }
+
+  private static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
+    if (argsList.contains("-README")) {
+      printUsage();
+      exitWithZero();
+    }
+  }
+
   private static void handleOptions(ArrayList<String> argsList) {
     if (isOption(argsList)) {
       handleInvalidOption(argsList);
-      handlePrintOption(argsList);
+      if (argsList.get(0).equals("-print")) {
+        handlePrintOption(argsList);
+      }
     }
+  }
+
+  private static boolean isOption(ArrayList<String> arrayList) {
+    return arrayList.get(0).startsWith("-");
   }
 
   private static void handleArguments(ArrayList<String> argsList) {
     containValidNumberOfArguments(argsList);
     exitWithZero();
-  }
-
-  public static boolean validate_IATA_AirportCode(String iataCode) {
-    return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
   }
 
   private static void handleInvalidOption(ArrayList<String> argsList) {
@@ -67,19 +84,57 @@ public class Project1 {
     return validOption;
   }
 
-  private static boolean isOption(ArrayList<String> arrayList) {
-    return arrayList.get(0).startsWith("-");
+  private static void handlePrintOption(ArrayList<String> argsList) {
+    argsList.remove(0);
+    handleArguments(argsList);
+  }
+
+
+  public static boolean valid_IATA_AirportCode(String iataCode) {
+    return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
+  }
+
+  public static boolean isValidDateTime(String dateTime) {
+    if (dateTime.split(" ").length != 2) {
+      return false;
+    }
+    String date = dateTime.split(" ")[0];
+    String time = dateTime.split(" ")[1];
+    return isValidDate(date) && isValidTime(time);
+  }
+
+  public static boolean isValidDate(String date) {
+    return  date.matches("[0-9]/[0-9]/[0-9][0-9][0-9][0-9]") ||
+    date.matches("[0-9][0-9]/[0-9]/[0-9][0-9][0-9][0-9]") ||
+    date.matches("[0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]") ||
+    date.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]");
+  }
+
+  public static boolean isValidTime(String time) {
+    if (time.split(":").length != 2) {
+      return false;
+    }
+
+    String minutePart = time.split(":")[1];
+    String hourPart = time.split(":")[0];
+
+    int minute;
+    int hour;
+    try {
+       minute = Integer.parseInt(minutePart);
+       hour = Integer.parseInt(hourPart);
+    } catch (NumberFormatException e) {
+      return false;
+    }
+
+    boolean validMinute = minute > -1 && minute < 60;
+    boolean validHour = hour > -1 && hour < 25;
+
+    return validHour && validMinute;
   }
 
   private static void printInvalidOptionMessage() {
     System.err.println("Invalid option");
-  }
-
-  private static void handlePrintOption(ArrayList<String> argsList) {
-    if (argsList.get(0).equals("-print")) {
-      argsList.remove(0);
-      handleArguments(argsList);
-    }
   }
 
   private static void containValidNumberOfArguments(ArrayList<String> argsList) {
@@ -91,20 +146,6 @@ public class Project1 {
 
   private static void printInvalidNumberOfArgumentsForPrintOptionMessage() {
     System.err.println("Invalid number of arguments for -print option");
-  }
-
-  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
-    if (argsList.isEmpty()) {
-      printMissingCommanLineArgumentsMessage();
-      exitWithOne();
-    }
-  }
-
-  private static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
-    if (argsList.contains("-README")) {
-      printUsage();
-      exitWithZero();
-    }
   }
 
   private static void printMissingCommanLineArgumentsMessage() {
