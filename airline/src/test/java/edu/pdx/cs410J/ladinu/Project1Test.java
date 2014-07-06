@@ -107,7 +107,7 @@ public class Project1Test extends InvokeMainTestCase {
 
   @Test
   public void shouldParseValidDate() {
-    assertTrue(Project1.isValidDate("3/15/2014"));
+    assertTrue(Project1.isValidDate("3/1/2014"));
     assertTrue(Project1.isValidDate("3/1/2014"));
     assertTrue(Project1.isValidDate("03/15/2014"));
     assertTrue(Project1.isValidDate("03/1/2014"));
@@ -118,6 +118,7 @@ public class Project1Test extends InvokeMainTestCase {
     assertFalse(Project1.isValidDate("January 1st 2012"));
 
   }
+
   @Ignore
   @Test
   public void containVlidNumberOfArgumentsPrintMessagesRegardingPrint() {
