@@ -124,6 +124,11 @@ public class Project1Test extends InvokeMainTestCase {
   public void containVlidNumberOfArgumentsPrintMessagesRegardingPrint() {
   }
 
+  @Ignore
+  @Test
+  public void testThatFlightNumberGetParsedToInt() {
+  }
+
   private void assertEmptyOutput(MainMethodResult result) {
     assertExitCodeIsZero(result);
     assertEquals(result.getOut(), "");

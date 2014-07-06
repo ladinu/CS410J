@@ -5,18 +5,33 @@ import edu.pdx.cs410J.AbstractFlight;
 import java.util.Date;
 
 public class Flight extends AbstractFlight {
+
+  private int number;
+  private String src;
+  private String departTime;
+  private String dest;
+  private String ariveTime;
+
   public Flight() {
     super();
   }
 
+  public Flight(int number, String src, String departTime, String dest, String ariveTime) {
+    this.number = number;
+    this.src = src;
+    this.departTime = departTime;
+    this.dest = dest;
+    this.ariveTime = ariveTime;
+  }
+
   @Override
   public int getNumber() {
-    return 0;
+    return number;
   }
 
   @Override
   public String getSource() {
-    return null;
+    return src;
   }
 
   @Override
@@ -26,12 +41,12 @@ public class Flight extends AbstractFlight {
 
   @Override
   public String getDepartureString() {
-    return null;
+    return departTime;
   }
 
   @Override
   public String getDestination() {
-    return null;
+    return dest;
   }
 
   @Override
@@ -41,6 +56,6 @@ public class Flight extends AbstractFlight {
 
   @Override
   public String getArrivalString() {
-    return null;
+    return ariveTime;
   }
 }
