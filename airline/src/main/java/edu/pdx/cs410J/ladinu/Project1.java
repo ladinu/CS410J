@@ -1,8 +1,5 @@
 package edu.pdx.cs410J.ladinu;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -25,6 +22,7 @@ public class Project1 {
       "  Date and time should be in the format: mm/dd/yyyy hh:mm";
 
   public static final String[] OPTIONS = new String[]{"-print", "-README"};
+  public static final HashMap<String, Airline> AIRLINES = new HashMap<>();
 
   public static void main(String[] args) {
     ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
@@ -32,6 +30,7 @@ public class Project1 {
     ifNoCommandLineArgumentsGivenThenExitWithOne(argsList);
     handleOptions(argsList);
     handleArguments(argsList);
+    exitWithZero();
   }
 
   private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
@@ -63,7 +62,96 @@ public class Project1 {
 
   private static void handleArguments(ArrayList<String> argsList) {
     containValidNumberOfArguments(argsList);
-    exitWithZero();
+    addFlightToAirlines(argsList);
+  }
+
+  private static Flight getFlight(ArrayList<String> argsList) {
+    String departTime = extractDepartTime(argsList);
+    String arriveTime = extractArriveTime(argsList);
+    String flightNumber = extractFlightNumber(argsList);
+    String srcAirport = extractSrc(argsList);
+    String destAirport = extractDest(argsList);
+
+    checkArgsContainValidFlightNumber(flightNumber);
+    checkArgsContainValidDepartTime(departTime);
+    checkArgsContainValidArriveTime(arriveTime);
+    checkArgsContainValidSrcAirportCode(srcAirport);
+    checkArgsContainValidDestAirportCode(destAirport);
+
+    return new Flight(parseInt(flightNumber), srcAirport,
+          departTime, destAirport, arriveTime);
+  }
+
+  private static void addFlightToAirlines(ArrayList<String> argsList) {
+    String airlineName = extractName(argsList);
+    Flight flight = getFlight(argsList);
+
+    if (AIRLINES.containsKey(airlineName)) {
+      AIRLINES.get(airlineName).addFlight(flight);
+    } else {
+      Airline airline = new Airline(airlineName);
+      airline.addFlight(flight);
+      AIRLINES.put(airlineName, airline);
+    }
+  }
+
+  private static String extractArriveTime(ArrayList<String> argsList) {
+    return argsList.get(6) + " " + argsList.get(7);
+  }
+
+  private static String extractDest(ArrayList<String> argsList) {
+    return argsList.get(5);
+  }
+
+  private static String extractDepartTime(ArrayList<String> argsList) {
+    return argsList.get(3) + " " + argsList.get(4);
+  }
+
+  private static String extractSrc(ArrayList<String> argsList) {
+    return argsList.get(2);
+  }
+
+  private static String extractFlightNumber(ArrayList<String> argsList) {
+    return argsList.get(1);
+  }
+
+  private static String extractName(ArrayList<String> argsList) {
+    return argsList.get(0);
+  }
+
+  private static void checkArgsContainValidSrcAirportCode(String src) {
+    if (!isValid_IATA_AirportCode(src)) {
+      System.err.println("Invalid src '" + src + "'");
+      exitWithOne();
+    }
+  }
+
+  private static void checkArgsContainValidDestAirportCode(String dest) {
+    if (!isValid_IATA_AirportCode(dest)) {
+      System.err.println("Invalid src '" + dest + "'");
+      exitWithOne();
+    }
+  }
+
+  private static void checkArgsContainValidArriveTime(String arriveTime) {
+    if (!isValidDateTime(arriveTime)) {
+      System.err.println("Invalid arrive date time '" + arriveTime + "'");
+      exitWithOne();
+    }
+  }
+
+  private static void checkArgsContainValidDepartTime(String departTime) {
+    if (!isValidDateTime(departTime)) {
+      System.err.println("Invalid depart date time '" + departTime + "'");
+      exitWithOne();
+    }
+  }
+
+  private static void checkArgsContainValidFlightNumber(String flightNumber) {
+    if (!isValidInt(flightNumber)) {
+      System.err.println("Invalid flight number '" + flightNumber + "'");
+      exitWithOne();
+    }
   }
 
   private static void handleInvalidOption(ArrayList<String> argsList) {
@@ -86,11 +174,16 @@ public class Project1 {
 
   private static void handlePrintOption(ArrayList<String> argsList) {
     argsList.remove(0);
+    printFlight(argsList);
     handleArguments(argsList);
   }
 
+  private static void printFlight(ArrayList<String> argsList) {
+    System.out.println(getFlight(argsList).toString());
+  }
 
-  public static boolean valid_IATA_AirportCode(String iataCode) {
+
+  public static boolean isValid_IATA_AirportCode(String iataCode) {
     return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
   }
 
@@ -142,6 +235,19 @@ public class Project1 {
       printInvalidNumberOfArgumentsForPrintOptionMessage();
       exitWithOne();
     }
+  }
+
+  public static boolean isValidInt(String integer) {
+    try {
+      parseInt(integer);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  public static int parseInt(String integer) throws NumberFormatException {
+      return Integer.parseInt(integer);
   }
 
   private static void printInvalidNumberOfArgumentsForPrintOptionMessage() {

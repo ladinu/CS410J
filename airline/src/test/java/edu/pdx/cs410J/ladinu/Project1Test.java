@@ -1,9 +1,11 @@
 package edu.pdx.cs410J.ladinu;
 
+import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import edu.pdx.cs410J.InvokeMainTestCase;
 import static junit.framework.Assert.assertEquals;
@@ -59,22 +61,30 @@ public class Project1Test extends InvokeMainTestCase {
 
   @Test
   public void optionsAreOptional() {
-    MainMethodResult result = invokeMain("Alaska A32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    MainMethodResult result = invokeMain("Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
     assertEmptyOutput(result);
+  }
+
+  @Test
+  public void testPrintOption() {
+    MainMethodResult result = invokeMain("-print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    Flight flight = new Flight(32, "PDX", "3/15/2014 17:00", "LAX", "3/15/2014 1:00");
+    assertEquals(flight.toString(), result.getOut());
+    assertExitCodeIsZero(result);
   }
   
   @Test
   public void shouldValidateIATACode() {
-    assertTrue(Project1.valid_IATA_AirportCode("PDX"));
-    assertTrue(Project1.valid_IATA_AirportCode("pdx"));
-    assertTrue(Project1.valid_IATA_AirportCode("PdX"));
+    assertTrue(Project1.isValid_IATA_AirportCode("PDX"));
+    assertTrue(Project1.isValid_IATA_AirportCode("pdx"));
+    assertTrue(Project1.isValid_IATA_AirportCode("PdX"));
 
-    assertFalse(Project1.valid_IATA_AirportCode(""));
-    assertFalse(Project1.valid_IATA_AirportCode("p"));
-    assertFalse(Project1.valid_IATA_AirportCode("pd"));
-    assertFalse(Project1.valid_IATA_AirportCode("PDXL"));
-    assertFalse(Project1.valid_IATA_AirportCode("PD1"));
-    assertFalse(Project1.valid_IATA_AirportCode("LA$"));
+    assertFalse(Project1.isValid_IATA_AirportCode(""));
+    assertFalse(Project1.isValid_IATA_AirportCode("p"));
+    assertFalse(Project1.isValid_IATA_AirportCode("pd"));
+    assertFalse(Project1.isValid_IATA_AirportCode("PDXL"));
+    assertFalse(Project1.isValid_IATA_AirportCode("PD1"));
+    assertFalse(Project1.isValid_IATA_AirportCode("LA$"));
   }
 
 
@@ -124,9 +134,24 @@ public class Project1Test extends InvokeMainTestCase {
   public void containVlidNumberOfArgumentsPrintMessagesRegardingPrint() {
   }
 
-  @Ignore
   @Test
   public void testThatFlightNumberGetParsedToInt() {
+    assertTrue(Project1.isValidInt("1"));
+    assertTrue(Project1.isValidInt("31233"));
+
+    assertFalse(Project1.isValidInt("q"));
+    assertFalse(Project1.isValidInt("four"));
+    assertFalse(Project1.isValidInt("3.1415928"));
+  }
+
+  @Test
+  public void testParseInt() throws Exception {
+    assertEquals(1, Project1.parseInt("1"));
+  }
+
+  @Test (expected = NumberFormatException.class)
+  public void testParseIntFail() {
+    Project1.parseInt("f");
   }
 
   private void assertEmptyOutput(MainMethodResult result) {
