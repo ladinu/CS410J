@@ -80,11 +80,21 @@ public class Project1 {
     return arrayList.get(0).startsWith("-");
   }
 
+  /**
+   * This function handles the flight arguments. It also ensure the passed arguments are
+   * valid arguments
+   * @param argsList
+   */
   private static void handleArguments(ArrayList<String> argsList) {
     containValidNumberOfArguments(argsList);
     addFlightToAirlines(argsList);
   }
 
+  /**
+   * Retrevies a flight object by using the information given in arguments
+   * @param argsList
+   * @return
+   */
   private static Flight getFlight(ArrayList<String> argsList) {
     String departTime = extractDepartTime(argsList);
     String arriveTime = extractArriveTime(argsList);
@@ -102,6 +112,11 @@ public class Project1 {
           departTime, destAirport, arriveTime);
   }
 
+  /**
+   * This function adds a flight to the <code>Airline</code> map by using the
+   * arguments specified in <code>argsList</code>
+   * @param argsList
+   */
   private static void addFlightToAirlines(ArrayList<String> argsList) {
     String airlineName = extractName(argsList);
     Flight flight = getFlight(argsList);
@@ -181,6 +196,12 @@ public class Project1 {
     }
   }
 
+  /**
+   * This function checks if the given option is a known option. At this point, if option
+   * does not match -print or -README, then it is an invalid option
+   * @param argsList
+   * @return True if valid option
+   */
   private static boolean containValidOption(ArrayList<String> argsList) {
     String option = argsList.get(0);
     boolean validOption = false;
@@ -203,6 +224,11 @@ public class Project1 {
   }
 
 
+  /**
+   * This option check if a string is a 3 letter code.
+   * @param iataCode
+   * @return True if valid IATA code
+   */
   public static boolean isValid_IATA_AirportCode(String iataCode) {
     return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
   }
@@ -216,6 +242,18 @@ public class Project1 {
     return isValidDate(date) && isValidTime(time);
   }
 
+  /**
+   * This function check if a date is any of this format:
+   *  1/2/2013
+   *  03/4/2013
+   *  3/04/2013
+   *  03/07/2013
+   *
+   *  Note: This does not check if the dates contain valid day/month or
+   *  take into account of leap years
+   * @param date
+   * @return True if it matches any of the mentioned formats
+   */
   public static boolean isValidDate(String date) {
     return  date.matches("[0-9]/[0-9]/[0-9][0-9][0-9][0-9]") ||
     date.matches("[0-9][0-9]/[0-9]/[0-9][0-9][0-9][0-9]") ||
@@ -227,7 +265,6 @@ public class Project1 {
     if (time.split(":").length != 2) {
       return false;
     }
-
     String minutePart = time.split(":")[1];
     String hourPart = time.split(":")[0];
 
