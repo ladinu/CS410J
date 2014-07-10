@@ -1,11 +1,9 @@
 package edu.pdx.cs410J.ladinu;
 
-import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import edu.pdx.cs410J.InvokeMainTestCase;
 import static junit.framework.Assert.assertEquals;
@@ -67,9 +65,9 @@ public class Project1Test extends InvokeMainTestCase {
 
   @Test
   public void testPrintOption() {
-    MainMethodResult result = invokeMain("-print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    MainMethodResult result = invokeMain("-print", "\"Alaska 2\"", "32", "PDX", "3/15/2014", "17:00", "LAX", "3/15/2014", "1:00");
     Flight flight = new Flight(32, "PDX", "3/15/2014 17:00", "LAX", "3/15/2014 1:00");
-    assertEquals(flight.toString(), result.getOut());
+    assertEquals(flight.toString() + "\n", result.getOut());
     assertExitCodeIsZero(result);
   }
   

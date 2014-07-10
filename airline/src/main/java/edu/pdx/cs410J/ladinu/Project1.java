@@ -33,6 +33,10 @@ public class Project1 {
     exitWithZero();
   }
 
+  /**
+   * Checks if arguments are empty or not. If arguments are empty, exit with 1.
+   * @param argsList
+   */
   private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
     if (argsList.isEmpty()) {
       printMissingCommanLineArgumentsMessage();
@@ -40,6 +44,11 @@ public class Project1 {
     }
   }
 
+  /**
+   * If any item in the argument list contain -README option, then print usage and exit with
+   * code 1
+   * @param argsList
+   */
   private static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
     if (argsList.contains("-README")) {
       printUsage();
@@ -47,6 +56,11 @@ public class Project1 {
     }
   }
 
+  /**
+   * This function is responsible for delegating control to other functions based on the
+   * arguments
+   * @param argsList
+   */
   private static void handleOptions(ArrayList<String> argsList) {
     if (isOption(argsList)) {
       handleInvalidOption(argsList);
@@ -56,6 +70,12 @@ public class Project1 {
     }
   }
 
+  /**
+   * Checks if first item in arguments start with a dash. If so, then it is considered
+   * a valid argument.
+   * @param arrayList
+   * @return
+   */
   private static boolean isOption(ArrayList<String> arrayList) {
     return arrayList.get(0).startsWith("-");
   }
@@ -174,8 +194,8 @@ public class Project1 {
 
   private static void handlePrintOption(ArrayList<String> argsList) {
     argsList.remove(0);
-    printFlight(argsList);
     handleArguments(argsList);
+    printFlight(argsList);
   }
 
   private static void printFlight(ArrayList<String> argsList) {
