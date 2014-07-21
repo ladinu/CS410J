@@ -5,6 +5,8 @@ import edu.pdx.cs410J.AirlineParser;
 import edu.pdx.cs410J.ParserException;
 
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class TextParser implements AirlineParser{
   private DataInputStream input;
@@ -20,6 +22,18 @@ public class TextParser implements AirlineParser{
    */
   @Override
   public AbstractAirline parse() throws ParserException {
-    return null;
+    AbstractAirline airline;
+    try {
+      ObjectInputStream objectInputStream = new ObjectInputStream(input);
+      try {
+        airline = (AbstractAirline)objectInputStream.readObject();
+      } catch (ClassNotFoundException e) {
+        throw new ParserException(e.getMessage());
+      }
+    } catch (IOException e) {
+      throw new ParserException(e.getMessage());
+    }
+    return airline;
   }
 }
+

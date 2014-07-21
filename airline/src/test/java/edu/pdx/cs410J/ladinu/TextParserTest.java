@@ -3,9 +3,7 @@ package edu.pdx.cs410J.ladinu;
 import edu.pdx.cs410J.AbstractAirline;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 import static org.junit.Assert.*;
 
@@ -19,24 +17,21 @@ public class TextParserTest {
   @Test
   public void testParse() throws Exception {
     // Setup
-    Airline airline = new Airline("Alaska Airline");
-    Flight flight = new Flight(42, "PDX", "02/20/1992 16:00", "LAX", "10/29/1992 17:00");
-    airline.addFlight(flight);
-    String airlineJSON = "{name:\"Alaska Airline\",flights:[{number:\"42\"," +
-        "src:\"PDX\",departDate:\"02/20/1992\",departTime:\"16:00\"," +
-        "dest:\"LAX\",arriveDate:\"10/29/1992\",arriveTime:\"17:00\"}]}";
-    TextParser parser = new TextParser(getIn(airlineJSON, "UTF-8"));
+    Airline airline = getPopulatedAirline("Alaska");
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+    TextDumper dumper = new TextDumper(dataOutputStream);
+    dumper.dump(airline);
+    ByteArrayInputStream bais = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+    DataInputStream dataInputStream = new DataInputStream(bais);
+    TextParser parser = new TextParser(dataInputStream);
 
     // SUT
     AbstractAirline abstractAirline = parser.parse();
 
     // Verify
-    assertEquals(airline, abstractAirline);
-    assertEquals(airline.getFlights().size(), 1);
-    for ( Object o : airline.getFlights()) {
-      Flight f = (Flight) o;
-      assertEquals(f, flight);
-    }
+    assertEquals(airline.getName(), abstractAirline.getName());
+    assertEquals(airline.getFlights().size(), abstractAirline.getFlights().size());
   }
 
   private DataInputStream getIn(String str, String charSet) throws UnsupportedEncodingException {
@@ -45,5 +40,12 @@ public class TextParserTest {
 
   private DataInputStream getIn(String str) {
     return new DataInputStream(new ByteArrayInputStream(str.getBytes()));
+  }
+
+  private Airline getPopulatedAirline(String name) {
+    Airline airline = new Airline(name);
+    Flight flight = new Flight(42, "PDX", "02/20/1992 16:00", "LAX", "10/29/1992 17:00");
+    airline.addFlight(flight);
+    return airline;
   }
 }
