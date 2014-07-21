@@ -135,6 +135,10 @@ public class Project2 {
     // If file exist, then read the file and populate AIRLINE map
     if (fileExist(textFilePath)) {
       AbstractAirline abstractAirline = readAirlineFromFile(textFilePath);
+      if (!abstractAirline.getName().equals(airlineName)) {
+        printAirlineNameInFileIsDifferent();
+        exitWithOne();
+      }
       AIRLINES.put(abstractAirline.getName(), (Airline)abstractAirline);
       addFlightToAirlines(argsList);
       writeAirlineToFile(airlineName, textFilePath);
@@ -143,6 +147,10 @@ public class Project2 {
       addFlightToAirlines(argsList);
       writeAirlineToFile(airlineName, textFilePath);
     }
+  }
+
+  private static void printAirlineNameInFileIsDifferent() {
+    System.err.println("Airline name in file is different");
   }
 
   private static AbstractAirline readAirlineFromFile(String file) {

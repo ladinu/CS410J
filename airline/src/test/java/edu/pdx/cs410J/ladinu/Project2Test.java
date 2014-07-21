@@ -278,6 +278,22 @@ public class Project2Test extends InvokeMainTestCase {
   }
 
   @Test
+  public void testAirlineNameIsDiffrentFromAirlineNameInFile() throws Exception {
+    // Setup
+    String file = tmpFolder.getRoot().toString() + "/alaska.txt";
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    String args1 = MessageFormat.format("-textFile {0} Foo 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    invokeMain(args);
+
+    // SUT
+    MainMethodResult result = invokeMain(args1);
+
+    // Verify
+    assertExitCodeIsOne(result);
+    assertEquals("Airline name in file is different\n", result.getErr());
+  }
+
+  @Test
   public void testPrintAndTextFileOption() throws Exception {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
