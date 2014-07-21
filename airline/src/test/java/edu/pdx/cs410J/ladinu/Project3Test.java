@@ -59,7 +59,7 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void testInvalidOption() {
-    MainMethodResult result = invokeMain("-invalidOption 1 2 3 4 5 6 7 8");
+    MainMethodResult result = invokeMain("-print -invalidOption Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
     assertError(result, "Invalid option");
   }
 
@@ -191,11 +191,6 @@ public class Project3Test extends InvokeMainTestCase {
     assertTrue(Project3.extractOptions(args("1 2 3 4 5 6 7 8")).isEmpty());
   }
 
-  @Test (expected = Exception.class)
-  public void testExtractOptionsError() throws Exception {
-    Project3.extractOptions(args("1 2 3 4 5 6 7"));
-  }
-
   @Test
   public void testExtractArguments() throws Exception {
     assertEquals(args("1 2 3 4 5 6 7 8"), Project3.extractArgs(args("1 2 3 4 5 6 7 8")));
@@ -207,16 +202,16 @@ public class Project3Test extends InvokeMainTestCase {
     Project3.extractArgs(args("3"));
   }
 
-  @Ignore
   @Test
-  public void testContainTextFileOption() throws Exception {
-    args("-print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Does not contain textFile
-    args("-print -textFile Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Invalid arguments
-    args("-print -textFile foo Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile
-    args("-textFile foo -print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile
-    args("-textFile -print -print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile, "-print" is the file name
+  public void testPrettyOptionAccepted() throws Exception {
+    MainMethodResult result = invokeMain("-pretty foo Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    assertExitCodeIsZero(result);
   }
 
+ @Test
+ @Ignore
+ public void printOptionAndPrettyOptionCannotWorkIfPrettyToStdout() throws Exception {
+ }
 
   @Test
   public void testFileExist() throws Exception {

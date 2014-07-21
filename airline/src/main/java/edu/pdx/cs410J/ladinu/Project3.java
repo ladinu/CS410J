@@ -2,6 +2,7 @@ package edu.pdx.cs410J.ladinu;
 
 
 import edu.pdx.cs410J.AbstractAirline;
+import edu.pdx.cs410J.AirportNames;
 import edu.pdx.cs410J.ParserException;
 
 import java.util.*;
@@ -26,7 +27,7 @@ public class Project3 {
       "    -README               Prints a README for this project and exits\n" +
       "  Date and time should be in the format: mm/dd/yyyy hh:mm";
 
-  public static final String[] OPTIONS = new String[]{"-print", "-README", "-textFile"};
+  public static final String[] OPTIONS = new String[]{"-print", "-pretty", "-README", "-textFile"};
   public static final HashMap<String, Airline> AIRLINES = new HashMap<>();
 
   public static void main(String[] args) {
@@ -72,20 +73,25 @@ public class Project3 {
 
   public static boolean containValidOptions(ArrayList<String> argsList) {
     ArrayList<String> options;
-    try {
-      options = extractOptions(argsList);
-    } catch (Exception e) {
-      return false;
-    }
+    options = extractOptions(argsList);
     // no options are okay
     if (options.isEmpty())
       return true;
 
-    if (options.size() > 3)
+    if (options.size() > 4)
       return false;
 
     if (options.contains("-textFile")) {
       int filePathIndex = options.indexOf("-textFile") + 1;
+      if (filePathIndex > options.size() - 1) {
+        return false;
+      } else {
+        options.remove(filePathIndex);
+      }
+    }
+
+    if (options.contains("-pretty")) {
+      int filePathIndex = options.indexOf("-pretty") + 1;
       if (filePathIndex > options.size() - 1) {
         return false;
       } else {
@@ -109,21 +115,40 @@ public class Project3 {
   private static void handleOptions(ArrayList<String> argsList) {
     checkForValidOptions(argsList);
     HashMap<String, String> optMap = getOptionMap(argsList);
-    if (optMap.containsKey("-print") && optMap.containsKey("-textFile")) {
-      handlePrintAndTextFile(argsList);
-    } else if (optMap.containsKey("-print")) {
+    if (hasKey(optMap, "-print", "-textFile", "-pretty")) {
+//     handlePrintAndTextFileAndPrettyOption();
+    } else if (hasKey(optMap, "-textFile", "-pretty")) {
+      // handleTextFileAndPrettyOption
+    } else if (hasKey(optMap, "-pretty", "-print")) {
+      // handlePrettyAndPrintOption
+    } else if (hasKey(optMap, "-print", "-textFile")) {
+      handlePrintAndTextFileOption(argsList);
+    } else if (hasKey(optMap, "-print")) {
       handlePrintOption(argsList);
-    } else if (optMap.containsKey("-textFile")) {
-      handleTextFile(argsList);
+    } else if (hasKey(optMap, "-textFile")) {
+      handleTextFileOption(argsList);
+    } else if (hasKey(optMap, "-pretty")) {
+      System.out.println("Pretty " + optMap.get("-pretty"));
+      exitWithZero();
+      // handlePrettyOption
     }
   }
 
-  private static void handlePrintAndTextFile(ArrayList<String> argsList) {
+  private static boolean hasKey(HashMap<String, String> optMap, String... keys) {
+    boolean containAll = true;
+    for (String key : keys) {
+      if (!optMap.containsKey(key))
+        containAll = false;
+    }
+    return containAll;
+  }
+
+  private static void handlePrintAndTextFileOption(ArrayList<String> argsList) {
     readWriteAirline(argsList);
     printFlight(argsList);
   }
 
-  private static void handleTextFile(ArrayList<String> argsList) {
+  private static void handleTextFileOption(ArrayList<String> argsList) {
     readWriteAirline(argsList);
     exitWithZero();
   }
@@ -219,13 +244,16 @@ public class Project3 {
 
   private static HashMap<String, String> getOptionMap(ArrayList<String> argsList) {
     HashMap<String, String> optionMap = new HashMap<>();
-    for(String opt: argsList) {
+    for(String opt: extractOptions(argsList)) {
       if (Arrays.asList(OPTIONS).contains(opt)) {
         optionMap.put(opt, "");
       }
     }
     if (optionMap.containsKey("-textFile")) {
       optionMap.put("-textFile", argsList.get(argsList.indexOf("-textFile") + 1));
+    }
+    if (optionMap.containsKey("-pretty")) {
+      optionMap.put("-pretty", argsList.get(argsList.indexOf("-pretty") + 1));
     }
     return optionMap;
   }
@@ -356,7 +384,8 @@ public class Project3 {
    * @return True if valid IATA code
    */
   public static boolean isValid_IATA_AirportCode(String iataCode) {
-    return iataCode.toUpperCase().matches("[A-Z][A-Z][A-Z]");
+    String code = iataCode.toUpperCase();
+    return AirportNames.getNamesMap().containsKey(code);
   }
 
   public static boolean isValidDateTime(String dateTime) {
@@ -428,11 +457,16 @@ public class Project3 {
     return argsList.size() >= 8;
   }
 
-  public static ArrayList<String> extractOptions(ArrayList<String> argsList) throws Exception {
+  public static ArrayList<String> extractOptions(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
-      throw new Exception("Does not contain valid argument number. Cannot extract options");
+      printCannotExtractOptionsError();
+      exitWithOne();
     }
     return new ArrayList<>(argsList.subList(0, argsList.size() - 8));
+  }
+
+  public static void printCannotExtractOptionsError() {
+    System.err.println("Command line arguments does not contain valid argument number. Hence, cannot extract options");
   }
 
 
