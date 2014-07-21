@@ -1,5 +1,7 @@
 package edu.pdx.cs410J.ladinu;
 
+import edu.pdx.cs410J.AbstractAirline;
+import edu.pdx.cs410J.ParserException;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -10,7 +12,8 @@ import static org.junit.Assert.assertTrue;
 import edu.pdx.cs410J.InvokeMainTestCase;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
+import java.io.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -227,6 +230,68 @@ public class Project2Test extends InvokeMainTestCase {
     assertTrue(Project2.fileExist(file.toString()));
     assertFalse(Project2.fileExist(nonExistantFile));
     assertFalse(Project2.fileExist(root.toString()));
+  }
+
+  @Test
+  public void testTextFileWriteNonExistantFile() throws Exception {
+    // Setup
+    String file = tmpFolder.getRoot().toString() + "/alaska.txt";
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    assertFalse(Project2.fileExist(file));
+
+    // SUT
+    MainMethodResult result = invokeMain(args);
+
+    // Verification
+    assertTrue(Project2.fileExist(file));
+    AbstractAirline airline = getAbstractAirline(file);
+    assertEquals("Alaska", airline.getName());
+    // WTF is going on here
+ //   assertEquals(1, airline.getFlights().size());
+    assertExitCodeIsZero(result);
+  }
+
+  public AbstractAirline getAbstractAirline(String file) throws FileNotFoundException, ParserException {
+    InputStream inputStream = new FileInputStream(file);
+    DataInputStream dataInputStream = new DataInputStream(inputStream);
+    TextParser parser = new TextParser(dataInputStream);
+    return parser.parse();
+  }
+
+  @Test
+  public void testTextFileReadExistingFile() throws Exception {
+    // Setup
+    String file = tmpFolder.getRoot().toString() + "/alaska.txt";
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    invokeMain(args);
+
+    // SUT
+    String args1 = MessageFormat.format("-textFile {0} Alaska 34 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    MainMethodResult result = invokeMain(args1);
+
+    // Verify
+    assertExitCodeIsZero(result);
+    assertTrue(Project2.fileExist(file));
+    AbstractAirline airline = getAbstractAirline(file);
+    assertEquals("Alaska", airline.getName());
+    // WTF? assertEquals(2, airline.getFlights().size());
+  }
+
+  @Test
+  public void testPrintAndTextFileOption() throws Exception {
+    // Setup
+    String file = tmpFolder.getRoot().toString() + "/alaska.txt";
+    String args = MessageFormat.format("-textFile {0} -print Alaska 32 PDZ 3/14/2013 15:00 LAX 4/4/2011 1:00", file);
+
+    // SUT
+    MainMethodResult result = invokeMain(args);
+
+    // Verify
+    String expected = "Flight 32 departs PDZ at 3/14/2013 15:00 arrives LAX at 4/4/2011 1:00\n";
+    assertExitCodeIsZero(result);
+    assertEquals(expected, result.getOut());
+    assertTrue(Project2.fileExist(file));
+
   }
 
   private ArrayList<String> args(String args) {

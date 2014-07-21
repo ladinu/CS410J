@@ -1,6 +1,9 @@
 package edu.pdx.cs410J.ladinu;
 
 
+import edu.pdx.cs410J.AbstractAirline;
+import edu.pdx.cs410J.ParserException;
+
 import java.util.*;
 import java.io.*;
 
@@ -107,12 +110,103 @@ public class Project2 {
     checkForValidOptions(argsList);
     HashMap<String, String> optMap = getOptionMap(argsList);
     if (optMap.containsKey("-print") && optMap.containsKey("-textFile")) {
-//      handlePrintAndTextFile(argsList);
+      handlePrintAndTextFile(argsList);
     } else if (optMap.containsKey("-print")) {
       handlePrintOption(argsList);
     } else if (optMap.containsKey("-textFile")) {
-//      handleTextFile(argsList);
+      handleTextFile(argsList);
     }
+  }
+
+  private static void handlePrintAndTextFile(ArrayList<String> argsList) {
+    readWriteAirline(argsList);
+    printFlight(argsList);
+  }
+
+  private static void handleTextFile(ArrayList<String> argsList) {
+    readWriteAirline(argsList);
+    exitWithZero();
+  }
+
+  private static void readWriteAirline(ArrayList<String> argsList) {
+    String textFilePath = extractTextFilePath(argsList);
+    String airlineName = extractName(argsList);
+
+    // If file exist, then read the file and populate AIRLINE map
+    if (fileExist(textFilePath)) {
+      AbstractAirline abstractAirline = readAirlineFromFile(textFilePath);
+      AIRLINES.put(abstractAirline.getName(), (Airline)abstractAirline);
+      addFlightToAirlines(argsList);
+      writeAirlineToFile(airlineName, textFilePath);
+    // Create a new file and write airline info
+    } else {
+      addFlightToAirlines(argsList);
+      writeAirlineToFile(airlineName, textFilePath);
+    }
+  }
+
+  private static AbstractAirline readAirlineFromFile(String file) {
+    InputStream inputStream = null;
+    try {
+      inputStream = new FileInputStream(file);
+    } catch (FileNotFoundException e) {
+      printCouldNotReadFile(file);
+      exitWithOne();
+    }
+    DataInputStream dataInputStream = new DataInputStream(inputStream);
+    TextParser parser = new TextParser(dataInputStream);
+    try {
+      return parser.parse();
+    } catch (ParserException e) {
+      printCouldNotParseAirline();
+      exitWithOne();
+    }
+    return null; // Execution should not get here
+  }
+
+  private static void printCouldNotParseAirline() {
+    System.err.println("Could not parse airline from file");
+  }
+
+  private static void printCouldNotReadFile(String file) {
+    System.err.println("Could not read file '" + file + "'");
+  }
+
+  private static void writeAirlineToFile(String airlineName, String textFilePath) {
+    Airline airline = AIRLINES.get(airlineName);
+    TextDumper textDumper = getTextDumper(textFilePath);
+    try {
+      textDumper.dump(airline);
+    } catch (IOException e) {
+      printCouldNotWriteToFile();
+      exitWithOne();
+    }
+  }
+
+  private static void printCouldNotWriteToFile() {
+    System.err.println("Could not write Airline info to file!");
+  }
+
+  private static TextDumper getTextDumper(String textFilePath) {
+    try {
+      OutputStream outputStream = new FileOutputStream(textFilePath);
+      DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+      TextDumper textDumper = new TextDumper(dataOutputStream);
+      return textDumper;
+    } catch (FileNotFoundException e) {
+      printCannotOpenFileError(textFilePath);
+      exitWithOne();
+    }
+    return null; // Execution should not reach here
+  }
+
+  private static void printCannotOpenFileError(String textFilePath) {
+    System.err.println("Could not open file '" + textFilePath + "' for some reason!");
+  }
+
+  private static String extractTextFilePath(ArrayList<String> argsList) {
+    HashMap<String, String> optMap = getOptionMap(argsList);
+    return optMap.get("-textFile");
   }
 
   private static HashMap<String, String> getOptionMap(ArrayList<String> argsList) {
