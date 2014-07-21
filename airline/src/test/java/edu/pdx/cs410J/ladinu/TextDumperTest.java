@@ -3,7 +3,6 @@ package edu.pdx.cs410J.ladinu;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 

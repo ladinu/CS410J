@@ -2,12 +2,15 @@ package edu.pdx.cs410J.ladinu;
 
 import junit.framework.Assert;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import edu.pdx.cs410J.InvokeMainTestCase;
+import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,6 +20,8 @@ import static junit.framework.Assert.assertEquals;
  * Tests the functionality in the {@link Project2} main class.
  */
 public class Project2Test extends InvokeMainTestCase {
+  @Rule
+  public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   /**
    * Invokes the main method of {@link Project2} with the given arguments.
@@ -208,6 +213,20 @@ public class Project2Test extends InvokeMainTestCase {
     args("-print -textFile foo Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile
     args("-textFile foo -print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile
     args("-textFile -print -print Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00"); // Contain textFile, "-print" is the file name
+  }
+
+
+  @Test
+  public void testFileExist() throws Exception {
+    // Setup
+    File root = tmpFolder.getRoot();
+    String nonExistantFile = root.toString() + "/foo.txt";
+    File file = tmpFolder.newFile("exist.txt");
+
+    // SUT & Verification
+    assertTrue(Project2.fileExist(file.toString()));
+    assertFalse(Project2.fileExist(nonExistantFile));
+    assertFalse(Project2.fileExist(root.toString()));
   }
 
   private ArrayList<String> args(String args) {

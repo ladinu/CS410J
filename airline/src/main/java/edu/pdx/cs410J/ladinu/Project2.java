@@ -1,8 +1,8 @@
 package edu.pdx.cs410J.ladinu;
 
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 
 import java.util.*;
+import java.io.*;
 
 /**
  * The main class for the CS410J airline Project
@@ -115,10 +115,6 @@ public class Project2 {
     }
   }
 
-  private static void printCannotRecoverMessage() {
-    System.err.println("Something went wrong. Cannot recover from error.");
-  }
-
   private static HashMap<String, String> getOptionMap(ArrayList<String> argsList) {
     HashMap<String, String> optionMap = new HashMap<>();
     for(String opt: argsList) {
@@ -130,16 +126,6 @@ public class Project2 {
       optionMap.put("-textFile", argsList.get(argsList.indexOf("-textFile") + 1));
     }
     return optionMap;
-  }
-
-  /**
-   * Checks if first item in arguments start with a dash. If so, then it is considered
-   * a valid argument.
-   * @param arrayList
-   * @return
-   */
-  private static boolean isOption(ArrayList<String> arrayList) {
-    return arrayList.get(0).startsWith("-");
   }
 
   /**
@@ -246,29 +232,11 @@ public class Project2 {
     }
   }
 
-  private static void handleInvalidOption(ArrayList<String> argsList) {
-    if (!containValidOption(argsList)) {
-      printInvalidOptionMessage();
-      exitWithOne();
-    }
+  public static boolean fileExist(String filePath) {
+    File file = new File(filePath);
+    return file.isFile();
   }
 
-  /**
-   * This function checks if the given option is a known option. At this point, if option
-   * does not match -print or -README, then it is an invalid option
-   * @param argsList
-   * @return True if valid option
-   */
-  private static boolean containValidOption(ArrayList<String> argsList) {
-    String option = argsList.get(0);
-    boolean validOption = false;
-    for ( String opt : OPTIONS) {
-      if (option.equals(opt)) {
-        validOption = true;
-      }
-    }
-    return validOption;
-  }
 
   private static void handlePrintOption(ArrayList<String> argsList) {
     addFlightToAirlines(argsList);
@@ -377,10 +345,6 @@ public class Project2 {
 
   public static int parseInt(String integer) throws NumberFormatException {
       return Integer.parseInt(integer);
-  }
-
-  private static void printInvalidNumberOfArgumentsForPrintOptionMessage() {
-    System.err.println("Invalid number of arguments for -print option");
   }
 
   private static void printMissingCommanLineArgumentsMessage() {

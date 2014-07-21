@@ -34,9 +34,6 @@ public class TextParserTest {
     assertEquals(airline.getFlights().size(), abstractAirline.getFlights().size());
   }
 
-  private DataInputStream getIn(String str, String charSet) throws UnsupportedEncodingException {
-    return new DataInputStream(new ByteArrayInputStream(str.getBytes(charSet)));
-  }
 
   private DataInputStream getIn(String str) {
     return new DataInputStream(new ByteArrayInputStream(str.getBytes()));
