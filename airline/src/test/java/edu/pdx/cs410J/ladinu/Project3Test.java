@@ -2,7 +2,6 @@ package edu.pdx.cs410J.ladinu;
 
 import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.ParserException;
-import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,20 +19,20 @@ import java.util.Arrays;
 import static junit.framework.Assert.assertEquals;
 
 /**
- * Tests the functionality in the {@link Project2} main class.
+ * Tests the functionality in the {@link Project3} main class.
  */
-public class Project2Test extends InvokeMainTestCase {
+public class Project3Test extends InvokeMainTestCase {
   @Rule
   public TemporaryFolder tmpFolder = new TemporaryFolder();
 
   /**
-   * Invokes the main method of {@link Project2} with the given arguments.
+   * Invokes the main method of {@link Project3} with the given arguments.
    */
   private MainMethodResult invokeMain(String... args) {
-    return invokeMain( Project2.class, args);
+    return invokeMain( Project3.class, args);
   }
   private MainMethodResult invokeMain(String args) {
-    return invokeMain( Project2.class, args.split(" "));
+    return invokeMain( Project3.class, args.split(" "));
   }
 
   /**
@@ -48,7 +47,7 @@ public class Project2Test extends InvokeMainTestCase {
   @Test
   public void shouldPrintUsageToStdOutAndExitWithZeroWhenReadmeOptionIsGiven() {
     MainMethodResult result = invokeMain("-README");
-    assertTrue(result.getOut().contains(Project2.USAGE));
+    assertTrue(result.getOut().contains(Project3.USAGE));
     assertExitCodeIsZero(result);
   }
 
@@ -86,126 +85,126 @@ public class Project2Test extends InvokeMainTestCase {
   
   @Test
   public void shouldValidateIATACode() {
-    assertTrue(Project2.isValid_IATA_AirportCode("PDX"));
-    assertTrue(Project2.isValid_IATA_AirportCode("pdx"));
-    assertTrue(Project2.isValid_IATA_AirportCode("PdX"));
+    assertTrue(Project3.isValid_IATA_AirportCode("PDX"));
+    assertTrue(Project3.isValid_IATA_AirportCode("pdx"));
+    assertTrue(Project3.isValid_IATA_AirportCode("PdX"));
 
-    assertFalse(Project2.isValid_IATA_AirportCode(""));
-    assertFalse(Project2.isValid_IATA_AirportCode("p"));
-    assertFalse(Project2.isValid_IATA_AirportCode("pd"));
-    assertFalse(Project2.isValid_IATA_AirportCode("PDXL"));
-    assertFalse(Project2.isValid_IATA_AirportCode("PD1"));
-    assertFalse(Project2.isValid_IATA_AirportCode("LA$"));
+    assertFalse(Project3.isValid_IATA_AirportCode(""));
+    assertFalse(Project3.isValid_IATA_AirportCode("p"));
+    assertFalse(Project3.isValid_IATA_AirportCode("pd"));
+    assertFalse(Project3.isValid_IATA_AirportCode("PDXL"));
+    assertFalse(Project3.isValid_IATA_AirportCode("PD1"));
+    assertFalse(Project3.isValid_IATA_AirportCode("LA$"));
   }
 
 
   @Test
   public void shouldParseValidDateTime() {
-    assertTrue(Project2.isValidDateTime("3/15/2014 10:39"));
-    assertTrue(Project2.isValidDateTime("03/2/2014 1:03"));
+    assertTrue(Project3.isValidDateTime("3/15/2014 10:39"));
+    assertTrue(Project3.isValidDateTime("03/2/2014 1:03"));
 
-    assertFalse(Project2.isValidDateTime("03/2/92 1:03"));
-    assertFalse(Project2.isValidDateTime("03/2/2014 1PM"));
-    assertFalse(Project2.isValidDateTime("03/2/2014 1:30PM"));
-    assertFalse(Project2.isValidDateTime("July 19th 2014 1:30PM"));
-    assertFalse(Project2.isValidDateTime("03/2/20141:03"));
+    assertFalse(Project3.isValidDateTime("03/2/92 1:03"));
+    assertFalse(Project3.isValidDateTime("03/2/2014 1PM"));
+    assertFalse(Project3.isValidDateTime("03/2/2014 1:30PM"));
+    assertFalse(Project3.isValidDateTime("July 19th 2014 1:30PM"));
+    assertFalse(Project3.isValidDateTime("03/2/20141:03"));
   }
 
   @Test
   public void shouldParseValidTime() {
-    assertTrue(Project2.isValidTime("00:00"));
-    assertTrue(Project2.isValidTime("01:00"));
-    assertTrue(Project2.isValidTime("1:00"));
-    assertTrue(Project2.isValidTime("24:00"));
-    assertTrue(Project2.isValidTime("24:0"));
-    assertTrue(Project2.isValidTime("24:59"));
+    assertTrue(Project3.isValidTime("00:00"));
+    assertTrue(Project3.isValidTime("01:00"));
+    assertTrue(Project3.isValidTime("1:00"));
+    assertTrue(Project3.isValidTime("24:00"));
+    assertTrue(Project3.isValidTime("24:0"));
+    assertTrue(Project3.isValidTime("24:59"));
 
-    assertFalse(Project2.isValidTime("1A:AM"));
-    assertFalse(Project2.isValidTime("1:3AM"));
-    assertFalse(Project2.isValidTime("13AM"));
+    assertFalse(Project3.isValidTime("1A:AM"));
+    assertFalse(Project3.isValidTime("1:3AM"));
+    assertFalse(Project3.isValidTime("13AM"));
   }
 
 
   @Test
   public void shouldParseValidDate() {
-    assertTrue(Project2.isValidDate("3/1/2014"));
-    assertTrue(Project2.isValidDate("3/1/2014"));
-    assertTrue(Project2.isValidDate("03/15/2014"));
-    assertTrue(Project2.isValidDate("03/1/2014"));
-    assertTrue(Project2.isValidDate("03/01/2014"));
+    assertTrue(Project3.isValidDate("3/1/2014"));
+    assertTrue(Project3.isValidDate("3/1/2014"));
+    assertTrue(Project3.isValidDate("03/15/2014"));
+    assertTrue(Project3.isValidDate("03/1/2014"));
+    assertTrue(Project3.isValidDate("03/01/2014"));
 
-    assertFalse(Project2.isValidDate("03/01/14"));
-    assertFalse(Project2.isValidDate("$/01/14"));
-    assertFalse(Project2.isValidDate("January 1st 2012"));
+    assertFalse(Project3.isValidDate("03/01/14"));
+    assertFalse(Project3.isValidDate("$/01/14"));
+    assertFalse(Project3.isValidDate("January 1st 2012"));
 
   }
 
   @Test
   public void testThatFlightNumberGetParsedToInt() {
-    assertTrue(Project2.isValidInt("1"));
-    assertTrue(Project2.isValidInt("31233"));
+    assertTrue(Project3.isValidInt("1"));
+    assertTrue(Project3.isValidInt("31233"));
 
-    assertFalse(Project2.isValidInt("q"));
-    assertFalse(Project2.isValidInt("four"));
-    assertFalse(Project2.isValidInt("3.1415928"));
+    assertFalse(Project3.isValidInt("q"));
+    assertFalse(Project3.isValidInt("four"));
+    assertFalse(Project3.isValidInt("3.1415928"));
   }
 
   @Test
   public void testParseInt() throws Exception {
-    assertEquals(1, Project2.parseInt("1"));
+    assertEquals(1, Project3.parseInt("1"));
   }
 
   @Test (expected = NumberFormatException.class)
   public void testParseIntFail() {
-    Project2.parseInt("f");
+    Project3.parseInt("f");
   }
 
   @Test
   public void testContainValidNumberOfArguments() throws Exception {
-    assertTrue(Project2.containValidNumberOfArguments(args("-print 1 2 3 4 5 6 7 8")));
-    assertTrue(Project2.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7 8")));
-    assertTrue(Project2.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7")));
-    assertTrue(Project2.containValidNumberOfArguments(args("1 2 3 4 5 6 7 8")));
-    assertFalse(Project2.containValidNumberOfArguments(args("1 2 3 4 5 6 7")));
+    assertTrue(Project3.containValidNumberOfArguments(args("-print 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7")));
+    assertTrue(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7 8")));
+    assertFalse(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7")));
   }
 
   @Test
   public void testContainValidOptions() throws Exception {
-    assertTrue(Project2.containValidOptions(args("1 2 3 4 5 6 7 8")));
-    assertTrue(Project2.containValidOptions(args("-print -textFile foo 1 2 3 4 5 6 7 8")));
-    assertTrue(Project2.containValidOptions(args("-textFile -print -print 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidOptions(args("1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidOptions(args("-print -textFile foo 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidOptions(args("-textFile -print -print 1 2 3 4 5 6 7 8")));
 
-    assertFalse(Project2.containValidOptions(args("-textFile f -prin 1 2 3 4 5 6 7 8")));
-    assertFalse(Project2.containValidOptions(args("-textFil f -print 1 2 3 4 5 6 7 8")));
-    assertFalse(Project2.containValidOptions(args("-textFile 1 2 3 4 5 6 7 8")));
-    assertFalse(Project2.containValidOptions(args("-textFile f -print -k 1 2 3 4 5 6 7 8")));
+    assertFalse(Project3.containValidOptions(args("-textFile f -prin 1 2 3 4 5 6 7 8")));
+    assertFalse(Project3.containValidOptions(args("-textFil f -print 1 2 3 4 5 6 7 8")));
+    assertFalse(Project3.containValidOptions(args("-textFile 1 2 3 4 5 6 7 8")));
+    assertFalse(Project3.containValidOptions(args("-textFile f -print -k 1 2 3 4 5 6 7 8")));
   }
 
   @Test
   public void testExtractOptions() throws Exception {
-    assertEquals(args("-print"), Project2.extractOptions(args("-print 1 2 3 4 5 6 7 8")));
-    assertEquals(args("-print -textFile"), Project2.extractOptions(args("-print -textFile 1 2 3 4 5 6 7 8")));
-    assertEquals(args("-print -textFile f"), Project2.extractOptions(args("-print -textFile f 1 2 3 4 5 6 7 8")));
-    assertEquals(args("-textFile f -print"), Project2.extractOptions(args("-textFile f -print 1 2 3 4 5 6 7 8")));
-    assertEquals(args("-textFile -print "), Project2.extractOptions(args("-textFile -print 1 2 3 4 5 6 7 8")));
-    assertEquals(args("-textFile -print foo"), Project2.extractOptions(args("-textFile -print foo 1 2 3 4 5 6 7 8")));
-    assertTrue(Project2.extractOptions(args("1 2 3 4 5 6 7 8")).isEmpty());
+    assertEquals(args("-print"), Project3.extractOptions(args("-print 1 2 3 4 5 6 7 8")));
+    assertEquals(args("-print -textFile"), Project3.extractOptions(args("-print -textFile 1 2 3 4 5 6 7 8")));
+    assertEquals(args("-print -textFile f"), Project3.extractOptions(args("-print -textFile f 1 2 3 4 5 6 7 8")));
+    assertEquals(args("-textFile f -print"), Project3.extractOptions(args("-textFile f -print 1 2 3 4 5 6 7 8")));
+    assertEquals(args("-textFile -print "), Project3.extractOptions(args("-textFile -print 1 2 3 4 5 6 7 8")));
+    assertEquals(args("-textFile -print foo"), Project3.extractOptions(args("-textFile -print foo 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.extractOptions(args("1 2 3 4 5 6 7 8")).isEmpty());
   }
 
   @Test (expected = Exception.class)
   public void testExtractOptionsError() throws Exception {
-    Project2.extractOptions(args("1 2 3 4 5 6 7"));
+    Project3.extractOptions(args("1 2 3 4 5 6 7"));
   }
 
   @Test
   public void testExtractArguments() throws Exception {
-    assertEquals(args("1 2 3 4 5 6 7 8"), Project2.extractArgs(args("1 2 3 4 5 6 7 8")));
-    assertEquals(args("2 3 4 5 6 7 8 9"), Project2.extractArgs(args("1 2 3 4 5 6 7 8 9")));
+    assertEquals(args("1 2 3 4 5 6 7 8"), Project3.extractArgs(args("1 2 3 4 5 6 7 8")));
+    assertEquals(args("2 3 4 5 6 7 8 9"), Project3.extractArgs(args("1 2 3 4 5 6 7 8 9")));
   }
 
   @Test (expected = IndexOutOfBoundsException.class)
   public void textExtractArgumentsFail() throws Exception {
-    Project2.extractArgs(args("3"));
+    Project3.extractArgs(args("3"));
   }
 
   @Ignore
@@ -227,9 +226,9 @@ public class Project2Test extends InvokeMainTestCase {
     File file = tmpFolder.newFile("exist.txt");
 
     // SUT & Verification
-    assertTrue(Project2.fileExist(file.toString()));
-    assertFalse(Project2.fileExist(nonExistantFile));
-    assertFalse(Project2.fileExist(root.toString()));
+    assertTrue(Project3.fileExist(file.toString()));
+    assertFalse(Project3.fileExist(nonExistantFile));
+    assertFalse(Project3.fileExist(root.toString()));
   }
 
   @Test
@@ -237,13 +236,13 @@ public class Project2Test extends InvokeMainTestCase {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
     String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
-    assertFalse(Project2.fileExist(file));
+    assertFalse(Project3.fileExist(file));
 
     // SUT
     MainMethodResult result = invokeMain(args);
 
     // Verification
-    assertTrue(Project2.fileExist(file));
+    assertTrue(Project3.fileExist(file));
     AbstractAirline airline = getAbstractAirline(file);
     assertEquals("Alaska", airline.getName());
     // WTF is going on here
@@ -271,7 +270,7 @@ public class Project2Test extends InvokeMainTestCase {
 
     // Verify
     assertExitCodeIsZero(result);
-    assertTrue(Project2.fileExist(file));
+    assertTrue(Project3.fileExist(file));
     AbstractAirline airline = getAbstractAirline(file);
     assertEquals("Alaska", airline.getName());
     // WTF? assertEquals(2, airline.getFlights().size());
@@ -306,7 +305,7 @@ public class Project2Test extends InvokeMainTestCase {
     String expected = "Flight 32 departs PDZ at 3/14/2013 15:00 arrives LAX at 4/4/2011 1:00\n";
     assertExitCodeIsZero(result);
     assertEquals(expected, result.getOut());
-    assertTrue(Project2.fileExist(file));
+    assertTrue(Project3.fileExist(file));
 
   }
 

@@ -10,7 +10,7 @@ import java.io.*;
 /**
  * The main class for the CS410J airline Project
  */
-public class Project2 {
+public class Project3 {
 
   public static final String USAGE = "" +
       "usage: java edu.pdx.cs410J.ladinu.Project1 [options] <args>\n" +
