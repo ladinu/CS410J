@@ -58,4 +58,18 @@ public class Flight extends AbstractFlight {
   public String getArrivalString() {
     return ariveTime;
   }
+
+  public  String toJSON() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{");
+    sb.append("number:\"" + this.number + "\",");
+    sb.append("src:\"" + this.src + "\",");
+    sb.append("departDate:\"" + this.departTime.split(" ")[0] + "\",");
+    sb.append("departTime:\"" + this.departTime.split(" ")[1] + "\",");
+    sb.append("dest:\"" + this.dest + "\",");
+    sb.append("arriveDate:\"" + this.ariveTime.split(" ")[0] + "\",");
+    sb.append("arriveTime:\"" + this.ariveTime.split(" ")[1] + "\"");
+    sb.append("}");
+    return sb.toString();
+  }
 }
