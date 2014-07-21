@@ -1,13 +1,12 @@
 package edu.pdx.cs410J.ladinu;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -19,34 +18,34 @@ public class TextDumperTest {
     td.setOutput(new DataOutputStream(new ByteArrayOutputStream()));
   }
 
-  @Ignore
   @Test
   public void testDump() throws Exception {
     // Setup
     TextDumper td = new TextDumper();
-    DataOutputStream output = new DataOutputStream(new ByteArrayOutputStream());
-    td.setOutput(output);
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    DataOutputStream out = new DataOutputStream(output);
+    td.setOutput(out);
     Airline airline = getPopulatedAirline("Alaska");
 
     // SUT
     td.dump(airline);
 
     // Verify
-    String expected = "{\"name\":\"Alaska\",\"flights\":[{\"number\"" +
-        ":42,\"src\":\"LAX\",\"departDate\":\"4/3/2012\",\"departTime\":\"15:00\"" +
-        ",\"dest\":\"LAX\",\"arriveDate\":\"4/3/2012\",\"arriveTime\":\"17:00\"}]}";
+    String json = "{name:\"Alaska\",flights:" +
+        "[{number:\"42\",src:\"PDX\",departDate:\"02/20/1992\",departTime:\"16:00\"," +
+        "dest:\"LAX\",arriveDate:\"10/29/1992\",arriveTime:\"17:00\"}]}";
 
-    assertEquals(expected, output.toString());
+    ByteArrayOutputStream output2 = new ByteArrayOutputStream();
+    DataOutputStream out2 = new DataOutputStream(output2);
+    out2.writeUTF(json);
+
+    assertTrue(Arrays.equals(output2.toByteArray(), output.toByteArray()));
   }
 
   private Airline getPopulatedAirline(String name) {
     Airline airline = new Airline(name);
-    Flight flight0 = new Flight(32, "LAX", "4/3/2005 4:00", "PDX", "4/3/2010 13:00");
-    Flight flight1 = new Flight(34, "ASX", "4/3/2005 12:00", "PDX", "4/3/2010 13:00");
-    Flight flight2 = new Flight(35, "ASX", "4/3/2005 12:00", "PDX", "4/3/2010 13:00");
-    airline.addFlight(flight0);
-    airline.addFlight(flight1);
-    airline.addFlight(flight2);
+    Flight flight = new Flight(42, "PDX", "02/20/1992 16:00", "LAX", "10/29/1992 17:00");
+    airline.addFlight(flight);
     return airline;
   }
 }

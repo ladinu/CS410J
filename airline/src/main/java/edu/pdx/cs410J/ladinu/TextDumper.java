@@ -14,9 +14,11 @@ public class TextDumper implements AirlineDumper {
     this.output = output;
   }
 
-
   @Override
   public void dump(AbstractAirline airline) throws IOException {
-
+    Airline airline1 = (Airline)airline;
+    output.writeUTF(airline1.toJSON());
+    output.flush();
+    output.close();
   }
 }

@@ -56,14 +56,14 @@ public class AirlineTest {
     airline.addFlight(flight);
 
     // SUT & Verification
-    String json = "" +
+    String json = "{name:\"Alaska Airline\",flights:" +
         "[{number:\"42\",src:\"PDX\",departDate:\"02/20/1992\",departTime:\"16:00\"," +
-        "dest:\"LAX\",arriveDate:\"10/29/1992\",arriveTime:\"17:00\"}]";
+        "dest:\"LAX\",arriveDate:\"10/29/1992\",arriveTime:\"17:00\"}]}";
     assertEquals(json, airline.toJSON());
   }
   @Test
   public void testToJSONEmpty() throws Exception {
     Airline airline = new Airline("Alaska Airline");
-    assertEquals("[]", airline.toJSON());
+    assertEquals("{name:\"Alaska Airline\",flights:[]}", airline.toJSON());
   }
 }

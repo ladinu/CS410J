@@ -47,13 +47,13 @@ public class Airline extends AbstractAirline {
     StringBuilder sb = new StringBuilder();
     Iterator iterator = flights.iterator();
 
-    sb.append("[");
+    sb.append("{name:\"" + this.name + "\",flights:[");
     while (iterator.hasNext()) {
       sb.append(((Flight)iterator.next()).toJSON());
       if (iterator.hasNext())
         sb.append(",");
     }
-    sb.append("]");
+    sb.append("]}");
     return sb.toString();
   }
 }
