@@ -5,20 +5,21 @@ import edu.pdx.cs410J.AirlineDumper;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class TextDumper implements AirlineDumper {
 
   private DataOutputStream output;
 
-  public void setOutput(DataOutputStream output) {
+  public TextDumper(DataOutputStream output) {
     this.output = output;
   }
 
   @Override
   public void dump(AbstractAirline airline) throws IOException {
-    Airline airline1 = (Airline)airline;
-    output.writeUTF(airline1.toJSON());
-    output.flush();
-    output.close();
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
+    objectOutputStream.writeObject(airline);
+    objectOutputStream.flush();
+    objectOutputStream.close();
   }
 }
