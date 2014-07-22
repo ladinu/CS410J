@@ -89,8 +89,8 @@ public class AboutExceptions {
 	public void returnInFinallyBlock() {
 		StringBuilder whatHappened = new StringBuilder();
 		// Which value will be returned here?
-		assertEquals(returnStatementsEverywhere(whatHappened), __);
-		assertEquals(whatHappened.toString(), __);
+		assertEquals(returnStatementsEverywhere(whatHappened), "from finally");
+		assertEquals(whatHappened.toString(), "try, catch, finally");
 	}
 	
 	private void doUncheckedStuff() {
@@ -100,11 +100,15 @@ public class AboutExceptions {
 	@Koan
 	public void catchUncheckedExceptions() {
 		// What do you need to do to catch the unchecked exception?
-		doUncheckedStuff();
+    try {
+      doUncheckedStuff();
+    } catch (Exception e) {
+
+    }
 	}
 	
 	@SuppressWarnings("serial")
-	static class ParentException extends Exception {}  
+	static class ParentException extends Exception {}
 	@SuppressWarnings("serial")
 	static class ChildException extends ParentException {}
 	
@@ -122,6 +126,6 @@ public class AboutExceptions {
 		} catch(ParentException e) {
 			s = "ParentException";
 		}
-		assertEquals(s, __);
+		assertEquals(s, "ChildException");
 	}	
 }
