@@ -47,8 +47,9 @@ public class AirlineTest {
   public void testToString() throws Exception {
     Airline airline = new Airline("Alaska Airline");
     assertEquals("Alaska Airline with 0 flights", airline.toString());
-    airline.addFlight(new Flight());
-    airline.addFlight(new Flight());
+    Flight flight = new Flight(42, "PDX", parseDate("11/20/1992 12:00 pm"), "LAX", parseDate("10/29/1992 12:00 pm"));
+    airline.addFlight(flight);
+    airline.addFlight(flight);
     assertEquals("Alaska Airline with 2 flights", airline.toString());
   }
 

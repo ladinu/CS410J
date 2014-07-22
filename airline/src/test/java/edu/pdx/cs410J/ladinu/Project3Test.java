@@ -179,7 +179,7 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void testPrettyOptionAccepted() throws Exception {
-    MainMethodResult result = invokeMain("-pretty foo Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
+    MainMethodResult result = invokeMain("-pretty -textFile foo Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
     assertExitCodeIsZero(result);
   }
 

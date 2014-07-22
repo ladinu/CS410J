@@ -122,6 +122,14 @@ public class Project3 {
 //     handlePrintAndTextFileAndPrettyOption();
     } else if (hasKey(optMap, "-textFile", "-pretty")) {
       // handleTextFileAndPrettyOption
+      readWriteAirline(argsList);
+      PrettyPrinter pp = new PrettyPrinter(System.out);
+      try {
+        pp.dump(AIRLINES.get(extractName(argsList)));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      exitWithZero();
     } else if (hasKey(optMap, "-pretty", "-print")) {
       // handlePrettyAndPrintOption
     } else if (hasKey(optMap, "-print", "-textFile")) {
@@ -131,8 +139,6 @@ public class Project3 {
     } else if (hasKey(optMap, "-textFile")) {
       handleTextFileOption(argsList);
     } else if (hasKey(optMap, "-pretty")) {
-      System.out.println("Pretty " + optMap.get("-pretty"));
-      exitWithZero();
       // handlePrettyOption
     }
   }
