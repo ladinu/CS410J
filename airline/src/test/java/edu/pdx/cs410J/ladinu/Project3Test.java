@@ -13,8 +13,11 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -70,9 +73,9 @@ public class Project3Test extends InvokeMainTestCase {
   }
 
   @Test
-  public void testPrintOption() {
+  public void testPrintOption() throws Exception {
     MainMethodResult result = invokeMain("-print", "\"Alaska 2\"", "32", "PDX", "3/15/2014", "12:00", "pm", "LAX", "3/15/2014", "1:00", "pm");
-    Flight flight = new Flight(32, "PDX", "3/15/2014 12:00 pm", "LAX", "3/15/2014 1:00 pm");
+    Flight flight = new Flight(32, "PDX", parseDate("3/15/2014 12:00 pm"), "LAX", parseDate("3/15/2014 1:00 pm"));
     assertEquals(flight.toString() + "\n", result.getOut());
     assertExitCodeIsZero(result);
   }
@@ -269,7 +272,7 @@ public class Project3Test extends InvokeMainTestCase {
     MainMethodResult result = invokeMain(args);
 
     // Verify
-    String expected = "Flight 32 departs PDX at 3/14/2013 12:00 pm arrives LAX at 4/4/2011 1:00 am\n";
+    String expected = "Flight 32 departs PDX at 3/14/13 arrives LAX at 4/4/11\n";
     assertExitCodeIsZero(result);
     assertEquals(expected, result.getOut());
     assertTrue(Project3.fileExist(file));
@@ -298,5 +301,9 @@ public class Project3Test extends InvokeMainTestCase {
 
   private void assertExitCodeIsOne(MainMethodResult result) {
     assertEquals(new Integer(1), result.getExitCode());
+  }
+
+  private Date parseDate(String dateStr) throws ParseException {
+    return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
   }
 }

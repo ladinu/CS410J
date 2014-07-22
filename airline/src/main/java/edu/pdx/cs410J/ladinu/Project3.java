@@ -281,7 +281,21 @@ public class Project3 {
     checkArgsContainValidDestAirportCode(destAirport);
 
     return new Flight(parseInt(flightNumber), srcAirport,
-          departTime, destAirport, arriveTime);
+          parseDate(departTime), destAirport, parseDate(arriveTime));
+  }
+
+  private static Date parseDate(String dateStr) {
+    try {
+      return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
+    } catch (ParseException e) {
+      printFatalError();
+      exitWithOne();
+    }
+    return null; // Execution should never get here
+  }
+
+  private static void printFatalError() {
+    System.err.println("Fatal Error!");
   }
 
   /**

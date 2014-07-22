@@ -2,21 +2,22 @@ package edu.pdx.cs410J.ladinu;
 
 import edu.pdx.cs410J.AbstractFlight;
 
+import java.text.DateFormat;
 import java.util.Date;
 
-public class Flight extends AbstractFlight {
+public class Flight extends AbstractFlight implements Comparable <Flight> {
 
   private int number;
   private String src;
-  private String departTime;
+  private Date departTime;
   private String dest;
-  private String ariveTime;
+  private Date ariveTime;
 
   public Flight() {
     super();
   }
 
-  public Flight(int number, String src, String departTime, String dest, String ariveTime) {
+  public Flight(int number, String src, Date departTime, String dest, Date ariveTime) {
     this.number = number;
     this.src = src;
     this.departTime = departTime;
@@ -41,7 +42,8 @@ public class Flight extends AbstractFlight {
 
   @Override
   public String getDepartureString() {
-    return departTime;
+    DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
+    return dateInstance.format(departTime);
   }
 
   @Override
@@ -56,7 +58,8 @@ public class Flight extends AbstractFlight {
 
   @Override
   public String getArrivalString() {
-    return ariveTime;
+    DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
+    return dateInstance.format(ariveTime);
   }
 
   public  String toJSON() {
@@ -64,12 +67,21 @@ public class Flight extends AbstractFlight {
     sb.append("{");
     sb.append("number:\"" + this.number + "\",");
     sb.append("src:\"" + this.src + "\",");
-    sb.append("departDate:\"" + this.departTime.split(" ")[0] + "\",");
-    sb.append("departTime:\"" + this.departTime.split(" ")[1] + "\",");
+    sb.append("departDate:\"" + this.getDepartureString() + "\",");
     sb.append("dest:\"" + this.dest + "\",");
-    sb.append("arriveDate:\"" + this.ariveTime.split(" ")[0] + "\",");
-    sb.append("arriveTime:\"" + this.ariveTime.split(" ")[1] + "\"");
+    sb.append("arriveDate:\"" + this.getArrivalString() + "\"");
     sb.append("}");
     return sb.toString();
+  }
+
+  @Override
+  public int compareTo(Flight f) {
+    if (f == this) {
+      return 0;
+    } else if (!f.src.equals(this.src)) {
+      return f.src.compareTo(this.src);
+    } else {
+      return f.departTime.compareTo(this.departTime);
+    }
   }
 }

@@ -5,6 +5,7 @@ import edu.pdx.cs410J.AbstractFlight;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class Airline extends AbstractAirline {
@@ -35,7 +36,12 @@ public class Airline extends AbstractAirline {
 
   @Override
   public Collection getFlights() {
-    return flights;
+    ArrayList<Flight> flights1 = new ArrayList<>();
+    for (AbstractFlight f : flights) {
+      flights1.add((Flight)f);
+    }
+    Collections.sort(flights1);
+    return flights1;
   }
 
   @Override
