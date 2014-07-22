@@ -52,33 +52,27 @@ public class Project3Test extends InvokeMainTestCase {
   }
 
   @Test
-  public void printOptionShouldNotHaveLessThanEightArguments() {
-    MainMethodResult result = invokeMain("-print 1 2 3 4 5 6 7");
-    assertError(result, "Invalid depart date time '3 4'");
-  }
-
-  @Test
   public void testInvalidOption() {
-    MainMethodResult result = invokeMain("-print -invalidOption Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    MainMethodResult result = invokeMain("-print -invalidOption Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
     assertError(result, "Invalid option");
   }
 
   @Test
   public void optionsAreOptional() {
-    MainMethodResult result = invokeMain("Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    MainMethodResult result = invokeMain("Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
     assertEmptyOutput(result);
   }
 
   @Test
   public void testInvalidNumberOfArguments() throws Exception {
     assertError(invokeMain("-print"), "Invalid number of arguments");
-    assertError(invokeMain("-print 1 2 3 4 5 6 7"), "Invalid depart date time '3 4'");
+    assertError(invokeMain("-print 1 2 3 4 5 6 7 8 9 10"), "Invalid depart date time '4 5 6'");
   }
 
   @Test
   public void testPrintOption() {
-    MainMethodResult result = invokeMain("-print", "\"Alaska 2\"", "32", "PDX", "3/15/2014", "17:00", "LAX", "3/15/2014", "1:00");
-    Flight flight = new Flight(32, "PDX", "3/15/2014 17:00", "LAX", "3/15/2014 1:00");
+    MainMethodResult result = invokeMain("-print", "\"Alaska 2\"", "32", "PDX", "3/15/2014", "12:00", "pm", "LAX", "3/15/2014", "1:00", "pm");
+    Flight flight = new Flight(32, "PDX", "3/15/2014 12:00 pm", "LAX", "3/15/2014 1:00 pm");
     assertEquals(flight.toString() + "\n", result.getOut());
     assertExitCodeIsZero(result);
   }
@@ -100,30 +94,19 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void shouldParseValidDateTime() {
-    assertTrue(Project3.isValidDateTime("3/15/2014 10:39"));
-    assertTrue(Project3.isValidDateTime("03/2/2014 1:03"));
+    assertTrue(Project3.isValidDateTime("3/15/2014 10:39 AM"));
+    assertTrue(Project3.isValidDateTime("3/15/2014 10:39 am"));
+    assertTrue(Project3.isValidDateTime("03/2/2014 1:03 PM"));
+    assertTrue(Project3.isValidDateTime("03/2/2014 1:03 pm"));
 
+    assertFalse(Project3.isValidDateTime("03/2/2014 13:03 pm"));
+    assertFalse(Project3.isValidDateTime("03/2/2014 1:03"));
     assertFalse(Project3.isValidDateTime("03/2/92 1:03"));
     assertFalse(Project3.isValidDateTime("03/2/2014 1PM"));
     assertFalse(Project3.isValidDateTime("03/2/2014 1:30PM"));
     assertFalse(Project3.isValidDateTime("July 19th 2014 1:30PM"));
     assertFalse(Project3.isValidDateTime("03/2/20141:03"));
   }
-
-  @Test
-  public void shouldParseValidTime() {
-    assertTrue(Project3.isValidTime("00:00"));
-    assertTrue(Project3.isValidTime("01:00"));
-    assertTrue(Project3.isValidTime("1:00"));
-    assertTrue(Project3.isValidTime("24:00"));
-    assertTrue(Project3.isValidTime("24:0"));
-    assertTrue(Project3.isValidTime("24:59"));
-
-    assertFalse(Project3.isValidTime("1A:AM"));
-    assertFalse(Project3.isValidTime("1:3AM"));
-    assertFalse(Project3.isValidTime("13AM"));
-  }
-
 
   @Test
   public void shouldParseValidDate() {
@@ -161,25 +144,14 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void testContainValidNumberOfArguments() throws Exception {
-    assertTrue(Project3.containValidNumberOfArguments(args("-print 1 2 3 4 5 6 7 8")));
+    assertTrue(Project3.containValidNumberOfArguments(args("-print 1 2 3 4 5 6 7 8 9 10")));
     assertTrue(Project3.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7 8")));
     assertTrue(Project3.containValidNumberOfArguments(args("-textFile foo -another -and_another 1 2 3 4 5 6 7")));
-    assertTrue(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7 8")));
-    assertFalse(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7")));
+    assertTrue(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7 8 9 10")));
+    assertFalse(Project3.containValidNumberOfArguments(args("1 2 3 4 5 6 7 8 9")));
   }
 
-  @Test
-  public void testContainValidOptions() throws Exception {
-    assertTrue(Project3.containValidOptions(args("1 2 3 4 5 6 7 8")));
-    assertTrue(Project3.containValidOptions(args("-print -textFile foo 1 2 3 4 5 6 7 8")));
-    assertTrue(Project3.containValidOptions(args("-textFile -print -print 1 2 3 4 5 6 7 8")));
-
-    assertFalse(Project3.containValidOptions(args("-textFile f -prin 1 2 3 4 5 6 7 8")));
-    assertFalse(Project3.containValidOptions(args("-textFil f -print 1 2 3 4 5 6 7 8")));
-    assertFalse(Project3.containValidOptions(args("-textFile 1 2 3 4 5 6 7 8")));
-    assertFalse(Project3.containValidOptions(args("-textFile f -print -k 1 2 3 4 5 6 7 8")));
-  }
-
+  @Ignore
   @Test
   public void testExtractOptions() throws Exception {
     assertEquals(args("-print"), Project3.extractOptions(args("-print 1 2 3 4 5 6 7 8")));
@@ -193,8 +165,8 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void testExtractArguments() throws Exception {
-    assertEquals(args("1 2 3 4 5 6 7 8"), Project3.extractArgs(args("1 2 3 4 5 6 7 8")));
-    assertEquals(args("2 3 4 5 6 7 8 9"), Project3.extractArgs(args("1 2 3 4 5 6 7 8 9")));
+    assertEquals(args("1 2 3 4 5 6 7 8 9 10"), Project3.extractArgs(args("1 2 3 4 5 6 7 8 9 10")));
+    assertEquals(args("2 3 4 5 6 7 8 9 10 11"), Project3.extractArgs(args("1 2 3 4 5 6 7 8 9 10 11")));
   }
 
   @Test (expected = IndexOutOfBoundsException.class)
@@ -204,7 +176,7 @@ public class Project3Test extends InvokeMainTestCase {
 
   @Test
   public void testPrettyOptionAccepted() throws Exception {
-    MainMethodResult result = invokeMain("-pretty foo Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00");
+    MainMethodResult result = invokeMain("-pretty foo Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
     assertExitCodeIsZero(result);
   }
 
@@ -230,7 +202,7 @@ public class Project3Test extends InvokeMainTestCase {
   public void testTextFileWriteNonExistantFile() throws Exception {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
-    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm", file);
     assertFalse(Project3.fileExist(file));
 
     // SUT
@@ -256,11 +228,11 @@ public class Project3Test extends InvokeMainTestCase {
   public void testTextFileReadExistingFile() throws Exception {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
-    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm", file);
     invokeMain(args);
 
     // SUT
-    String args1 = MessageFormat.format("-textFile {0} Alaska 34 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    String args1 = MessageFormat.format("-textFile {0} Alaska 34 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm", file);
     MainMethodResult result = invokeMain(args1);
 
     // Verify
@@ -275,8 +247,8 @@ public class Project3Test extends InvokeMainTestCase {
   public void testAirlineNameIsDiffrentFromAirlineNameInFile() throws Exception {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
-    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
-    String args1 = MessageFormat.format("-textFile {0} Foo 32 PDX 3/15/2014 17:00 LAX 3/15/2014 1:00", file);
+    String args = MessageFormat.format("-textFile {0} Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm", file);
+    String args1 = MessageFormat.format("-textFile {0} Foo 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm", file);
     invokeMain(args);
 
     // SUT
@@ -291,13 +263,13 @@ public class Project3Test extends InvokeMainTestCase {
   public void testPrintAndTextFileOption() throws Exception {
     // Setup
     String file = tmpFolder.getRoot().toString() + "/alaska.txt";
-    String args = MessageFormat.format("-textFile {0} -print Alaska 32 PDZ 3/14/2013 15:00 LAX 4/4/2011 1:00", file);
+    String args = MessageFormat.format("-textFile {0} -print Alaska 32 PDX 3/14/2013 12:00 pm LAX 4/4/2011 1:00 am", file);
 
     // SUT
     MainMethodResult result = invokeMain(args);
 
     // Verify
-    String expected = "Flight 32 departs PDZ at 3/14/2013 15:00 arrives LAX at 4/4/2011 1:00\n";
+    String expected = "Flight 32 departs PDX at 3/14/2013 12:00 pm arrives LAX at 4/4/2011 1:00 am\n";
     assertExitCodeIsZero(result);
     assertEquals(expected, result.getOut());
     assertTrue(Project3.fileExist(file));

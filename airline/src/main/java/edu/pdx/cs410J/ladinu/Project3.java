@@ -5,6 +5,8 @@ import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.AirportNames;
 import edu.pdx.cs410J.ParserException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
 
@@ -29,6 +31,7 @@ public class Project3 {
 
   public static final String[] OPTIONS = new String[]{"-print", "-pretty", "-README", "-textFile"};
   public static final HashMap<String, Airline> AIRLINES = new HashMap<>();
+  public static final int ARGUMENT_COUNT = 10;
 
   public static void main(String[] args) {
     ArrayList<String> argsList = new ArrayList<>(Arrays.asList(args));
@@ -300,19 +303,19 @@ public class Project3 {
   }
 
   public static ArrayList<String> extractArgs(ArrayList<String> argsList) {
-    return new ArrayList<>(argsList.subList(argsList.size() - 8, argsList.size()));
+    return new ArrayList<>(argsList.subList(argsList.size() - ARGUMENT_COUNT, argsList.size()));
   }
 
   private static String extractArriveTime(ArrayList<String> argsList) {
-    return argsList.get(6) + " " + argsList.get(7);
+    return argsList.get(7) + " " + argsList.get(8) + " " + argsList.get(9);
   }
 
   private static String extractDest(ArrayList<String> argsList) {
-    return argsList.get(5);
+    return argsList.get(6);
   }
 
   private static String extractDepartTime(ArrayList<String> argsList) {
-    return argsList.get(3) + " " + argsList.get(4);
+    return argsList.get(3) + " " + argsList.get(4) + " " + argsList.get(5);
   }
 
   private static String extractSrc(ArrayList<String> argsList) {
@@ -389,13 +392,25 @@ public class Project3 {
   }
 
   public static boolean isValidDateTime(String dateTime) {
-    if (dateTime.split(" ").length != 2) {
+    if (dateTime.split(" ").length != 3) {
       return false;
     }
     String date = dateTime.split(" ")[0];
-    String time = dateTime.split(" ")[1];
-    return isValidDate(date) && isValidTime(time);
+    if (isValidDate(date)) {
+      String dateFormat = "MM/dd/yyyy h:mm a";
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+      simpleDateFormat.setLenient(false);
+      try {
+        simpleDateFormat.parse(dateTime);
+        return true;
+      } catch (ParseException e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
+
 
   /**
    * This function check if a date is any of this format:
@@ -416,28 +431,6 @@ public class Project3 {
     date.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]");
   }
 
-  public static boolean isValidTime(String time) {
-    if (time.split(":").length != 2) {
-      return false;
-    }
-    String minutePart = time.split(":")[1];
-    String hourPart = time.split(":")[0];
-
-    int minute;
-    int hour;
-    try {
-       minute = Integer.parseInt(minutePart);
-       hour = Integer.parseInt(hourPart);
-    } catch (NumberFormatException e) {
-      return false;
-    }
-
-    boolean validMinute = minute > -1 && minute < 60;
-    boolean validHour = hour > -1 && hour < 25;
-
-    return validHour && validMinute;
-  }
-
   private static void printInvalidOptionMessage() {
     System.err.println("Invalid option");
   }
@@ -454,7 +447,7 @@ public class Project3 {
   }
 
   public static boolean containValidNumberOfArguments(ArrayList<String> argsList) {
-    return argsList.size() >= 8;
+    return argsList.size() >= ARGUMENT_COUNT;
   }
 
   public static ArrayList<String> extractOptions(ArrayList<String> argsList) {
@@ -462,7 +455,7 @@ public class Project3 {
       printCannotExtractOptionsError();
       exitWithOne();
     }
-    return new ArrayList<>(argsList.subList(0, argsList.size() - 8));
+    return new ArrayList<>(argsList.subList(0, argsList.size() - ARGUMENT_COUNT));
   }
 
   public static void printCannotExtractOptionsError() {
