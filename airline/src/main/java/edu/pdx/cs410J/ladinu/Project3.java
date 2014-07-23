@@ -81,7 +81,7 @@ public class Project3 {
     if (options.isEmpty())
       return true;
 
-    if (options.size() > 4)
+    if (options.size() > 5)
       return false;
 
     if (options.contains("-textFile")) {
@@ -123,7 +123,7 @@ public class Project3 {
     } else if (hasKey(optMap, "-textFile", "-pretty")) {
       handleTextFileAndPrettyOption(argsList);
     } else if (hasKey(optMap, "-pretty", "-print")) {
-      handlePrettyAndPrintOption();
+      handlePrettyAndPrintOption(argsList);
     } else if (hasKey(optMap, "-print", "-textFile")) {
       handlePrintAndTextFileOption(argsList);
     } else if (hasKey(optMap, "-print")) {
@@ -136,7 +136,11 @@ public class Project3 {
   }
 
   private static void handlePrintAndTextFileAndPrettyOption(ArrayList<String> argsList) {
-    handlePrettyAndPrintOption();
+    readWriteAirline(argsList);
+    exitIfFileIsStdoutForPretty(argsList);
+    prettyPrintToFile(argsList);
+    printFlight(argsList);
+    exitWithZero();
   }
 
   private static void handleTextFileAndPrettyOption(ArrayList<String> argsList) {
@@ -145,9 +149,19 @@ public class Project3 {
     exitWithZero();
   }
 
-  private static void handlePrettyAndPrintOption() {
-    printPickPrintOrPrettyOptionError();
-    exitWithOne();
+  private static void handlePrettyAndPrintOption(ArrayList<String> argsList) {
+    exitIfFileIsStdoutForPretty(argsList);
+    addFlightToAirlines(argsList);
+    prettyPrintToFile(argsList);
+    printFlight(argsList);
+    exitWithZero();
+  }
+
+  private static void exitIfFileIsStdoutForPretty(ArrayList<String> argsList) {
+    if (isFilePathStdout((argsList))) {
+      printPickPrintOrPrettyOptionError();
+      exitWithOne();
+    }
   }
 
   private static void printPickPrintOrPrettyOptionError() {
@@ -179,7 +193,7 @@ public class Project3 {
   private static PrintStream getPrintStream(ArrayList<String> argsList) {
     PrintStream printStream;
     String filePath = extractPrettyPrinterFilePath(argsList);
-    if (filePath.equals("-")) {
+    if (isFilePathStdout(argsList)) {
       printStream = System.out;
     } else {
       try {
@@ -192,6 +206,11 @@ public class Project3 {
       }
     }
     return printStream;
+  }
+
+  private static boolean isFilePathStdout(ArrayList<String> argsList) {
+    String filePath = extractPrettyPrinterFilePath(argsList);
+    return filePath.equals("-");
   }
 
   private static void printUnableOpenFileError() {
