@@ -119,19 +119,11 @@ public class Project3 {
     checkForValidOptions(argsList);
     HashMap<String, String> optMap = getOptionMap(argsList);
     if (hasKey(optMap, "-print", "-textFile", "-pretty")) {
-//     handlePrintAndTextFileAndPrettyOption();
+      handlePrintAndTextFileAndPrettyOption(argsList);
     } else if (hasKey(optMap, "-textFile", "-pretty")) {
-      // handleTextFileAndPrettyOption
-      readWriteAirline(argsList);
-      PrettyPrinter pp = new PrettyPrinter(System.out);
-      try {
-        pp.dump(AIRLINES.get(extractName(argsList)));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      exitWithZero();
+      handleTextFileAndPrettyOption(argsList);
     } else if (hasKey(optMap, "-pretty", "-print")) {
-      // handlePrettyAndPrintOption
+      handlePrettyAndPrintOption();
     } else if (hasKey(optMap, "-print", "-textFile")) {
       handlePrintAndTextFileOption(argsList);
     } else if (hasKey(optMap, "-print")) {
@@ -139,8 +131,76 @@ public class Project3 {
     } else if (hasKey(optMap, "-textFile")) {
       handleTextFileOption(argsList);
     } else if (hasKey(optMap, "-pretty")) {
-      // handlePrettyOption
+      handlePretty(argsList);
     }
+  }
+
+  private static void handlePrintAndTextFileAndPrettyOption(ArrayList<String> argsList) {
+    handlePrettyAndPrintOption();
+  }
+
+  private static void handleTextFileAndPrettyOption(ArrayList<String> argsList) {
+    readWriteAirline(argsList);
+    prettyPrintToFile(argsList);
+    exitWithZero();
+  }
+
+  private static void handlePrettyAndPrintOption() {
+    printPickPrintOrPrettyOptionError();
+    exitWithOne();
+  }
+
+  private static void printPickPrintOrPrettyOptionError() {
+    System.err.println("Cannot print and pretty print at same time. Pick one option.");
+  }
+
+  private static void handlePretty(ArrayList<String> argsList) {
+    addFlightToAirlines(argsList);
+    prettyPrintToFile(argsList);
+    exitWithZero();
+  }
+
+  private static void prettyPrintToFile(ArrayList<String> argsList) {
+    PrettyPrinter pp = new PrettyPrinter(getPrintStream(argsList));
+    String airlineName = extractName(argsList);
+    Airline airline = AIRLINES.get(airlineName);
+    try {
+      pp.dump(airline);
+    } catch (IOException e) {
+      printUnableToPrettyPrintError();
+      exitWithOne();
+    }
+  }
+
+  private static void printUnableToPrettyPrintError() {
+    System.err.println("Unable to pretty print");
+  }
+
+  private static PrintStream getPrintStream(ArrayList<String> argsList) {
+    PrintStream printStream;
+    String filePath = extractPrettyPrinterFilePath(argsList);
+    if (filePath.equals("-")) {
+      printStream = System.out;
+    } else {
+      try {
+        FileOutputStream file = new FileOutputStream(filePath);
+        printStream = new PrintStream(file);
+      } catch (FileNotFoundException e) {
+        printUnableOpenFileError();
+        exitWithOne();
+        return null;
+      }
+    }
+    return printStream;
+  }
+
+  private static void printUnableOpenFileError() {
+    System.err.println("Unable to open file!");
+  }
+
+  private static String extractPrettyPrinterFilePath(ArrayList<String> argsList) {
+    HashMap<String, String> optMap = getOptionMap(argsList);
+    return optMap.get("-pretty");
   }
 
   private static boolean hasKey(HashMap<String, String> optMap, String... keys) {
@@ -155,6 +215,7 @@ public class Project3 {
   private static void handlePrintAndTextFileOption(ArrayList<String> argsList) {
     readWriteAirline(argsList);
     printFlight(argsList);
+    exitWithZero();
   }
 
   private static void handleTextFileOption(ArrayList<String> argsList) {

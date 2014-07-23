@@ -51,15 +51,15 @@ public class Airline extends AbstractAirline {
 
   public String toJSON() {
     StringBuilder sb = new StringBuilder();
-    Iterator iterator = flights.iterator();
+    Iterator iterator = this.getFlights().iterator();
 
-    sb.append("{name:\"" + this.name + "\",flights:[");
+    sb.append("{\n\tname: \"" + this.name + "\",\n\tflights: [");
     while (iterator.hasNext()) {
       sb.append(((Flight)iterator.next()).toJSON());
       if (iterator.hasNext())
-        sb.append(",");
+        sb.append(",\n");
     }
-    sb.append("]}");
+    sb.append("\t         ]\n}\n");
     return sb.toString();
   }
 }

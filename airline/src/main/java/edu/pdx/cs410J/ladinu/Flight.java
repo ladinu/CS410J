@@ -1,9 +1,11 @@
 package edu.pdx.cs410J.ladinu;
 
 import edu.pdx.cs410J.AbstractFlight;
+import edu.pdx.cs410J.AirportNames;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Flight extends AbstractFlight implements Comparable <Flight> {
 
@@ -63,14 +65,17 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
   }
 
   public  String toJSON() {
+    long duration = ariveTime.getTime() - departTime.getTime();
+    duration = TimeUnit.MILLISECONDS.toMinutes(duration);
+
     StringBuilder sb = new StringBuilder();
-    sb.append("{");
-    sb.append("number:\"" + this.number + "\",");
-    sb.append("src:\"" + this.src + "\",");
-    sb.append("departDate:\"" + this.getDepartureString() + "\",");
-    sb.append("dest:\"" + this.dest + "\",");
-    sb.append("arriveDate:\"" + this.getArrivalString() + "\"");
-    sb.append("}");
+    sb.append("\n\t\t\t{ number: \"" + this.number + "\",\n");
+    sb.append("\t\t\t  src: \"" + AirportNames.getName(this.src) + "\",\n");
+    sb.append("\t\t\t  departDate: \"" + this.getDepartureString() + "\",\n");
+    sb.append("\t\t\t  dest: \"" + AirportNames.getName(this.dest) + "\",\n");
+    sb.append("\t\t\t  arriveDate: \"" + this.getArrivalString() + "\"\n");
+    sb.append("\t\t\t  duration: \"" + duration + " minutes\"\n");
+    sb.append("\t\t\t}");
     return sb.toString();
   }
 

@@ -177,6 +177,7 @@ public class Project3Test extends InvokeMainTestCase {
     Project3.extractArgs(args("3"));
   }
 
+  @Ignore
   @Test
   public void testPrettyOptionAccepted() throws Exception {
     MainMethodResult result = invokeMain("-pretty -textFile foo Alaska 32 PDX 3/15/2014 12:00 pm LAX 3/15/2014 1:00 pm");
