@@ -27,7 +27,14 @@ public class Project3 {
       "  options are (options may appear in any order):\n" +
       "    -print                Prints a description of the new flight\n" +
       "    -README               Prints a README for this project and exits\n" +
-      "  Date and time should be in the format: mm/dd/yyyy hh:mm";
+      "  Date and time should be in the format: mm/dd/yyyy hh:mm\n" +
+      "\n" +
+      "This program extends the functionality of project 2. In this version,\n" +
+      "you need to enter time using 12hour format followed by am/pm. For example: \n" +
+      " $ java -jar program -print Alaska 31 PDX 2/1/2014 9:00 am LAX 2/1/2014 11:30 am\n" +
+      "Also note that you cannot use -print option with -pretty - options togather. Since \n" +
+      "they both print to STDOUT the program will complain. ALso, the program does not complain\n" +
+      "if you use -textFile and -pretty option for the same file.";
 
   public static final String[] OPTIONS = new String[]{"-print", "-pretty", "-README", "-textFile"};
   public static final HashMap<String, Airline> AIRLINES = new HashMap<>();
