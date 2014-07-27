@@ -57,8 +57,8 @@ public class Project3 {
    */
   private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
     if (argsList.isEmpty()) {
-      printMissingCommanLineArgumentsMessage();
-      exitWithOne();
+      Errors.printMissingCommanLineArgumentsError();
+      Errors.exitWithOne();
     }
   }
 
@@ -76,8 +76,8 @@ public class Project3 {
 
   private static void checkForValidOptions(ArrayList<String> argsList) {
     if (!containValidOptions(argsList)) {
-      printInvalidOptionMessage();
-      exitWithOne();
+      Errors.printInvalidOptionError();
+      Errors.exitWithOne();
     }
   }
 
@@ -166,13 +166,9 @@ public class Project3 {
 
   private static void exitIfFileIsStdoutForPretty(ArrayList<String> argsList) {
     if (isFilePathStdout((argsList))) {
-      printPickPrintOrPrettyOptionError();
-      exitWithOne();
+      Errors.printPickPrintOrPrettyOptionError();
+      Errors.exitWithOne();
     }
-  }
-
-  private static void printPickPrintOrPrettyOptionError() {
-    System.err.println("Cannot print and pretty print at same time. Pick one option.");
   }
 
   private static void handlePretty(ArrayList<String> argsList) {
@@ -188,13 +184,9 @@ public class Project3 {
     try {
       pp.dump(airline);
     } catch (IOException e) {
-      printUnableToPrettyPrintError();
-      exitWithOne();
+      Errors.printUnableToPrettyPrintError();
+      Errors.exitWithOne();
     }
-  }
-
-  private static void printUnableToPrettyPrintError() {
-    System.err.println("Unable to pretty print");
   }
 
   private static PrintStream getPrintStream(ArrayList<String> argsList) {
@@ -207,8 +199,8 @@ public class Project3 {
         FileOutputStream file = new FileOutputStream(filePath);
         printStream = new PrintStream(file);
       } catch (FileNotFoundException e) {
-        printUnableOpenFileError();
-        exitWithOne();
+        Errors.printUnableToOpenFileError();
+        Errors.exitWithOne();
         return null;
       }
     }
@@ -218,10 +210,6 @@ public class Project3 {
   private static boolean isFilePathStdout(ArrayList<String> argsList) {
     String filePath = extractPrettyPrinterFilePath(argsList);
     return filePath.equals("-");
-  }
-
-  private static void printUnableOpenFileError() {
-    System.err.println("Unable to open file!");
   }
 
   private static String extractPrettyPrinterFilePath(ArrayList<String> argsList) {
@@ -257,8 +245,8 @@ public class Project3 {
     if (fileExist(textFilePath)) {
       AbstractAirline abstractAirline = readAirlineFromFile(textFilePath);
       if (!abstractAirline.getName().equals(airlineName)) {
-        printAirlineNameInFileIsDifferent();
-        exitWithOne();
+        Errors.printAirlineNameInFileIsDifferent();
+        Errors.exitWithOne();
       }
       AIRLINES.put(abstractAirline.getName(), (Airline)abstractAirline);
       addFlightToAirlines(argsList);
@@ -270,35 +258,23 @@ public class Project3 {
     }
   }
 
-  private static void printAirlineNameInFileIsDifferent() {
-    System.err.println("Airline name in file is different");
-  }
-
   private static AbstractAirline readAirlineFromFile(String file) {
     InputStream inputStream = null;
     try {
       inputStream = new FileInputStream(file);
     } catch (FileNotFoundException e) {
-      printCouldNotReadFile(file);
-      exitWithOne();
+      Errors.printCouldNotReadFile(file);
+      Errors.exitWithOne();
     }
     DataInputStream dataInputStream = new DataInputStream(inputStream);
     TextParser parser = new TextParser(dataInputStream);
     try {
       return parser.parse();
     } catch (ParserException e) {
-      printCouldNotParseAirline();
-      exitWithOne();
+      Errors.printCouldNotParseAirline();
+      Errors.exitWithOne();
     }
     return null; // Execution should not get here
-  }
-
-  private static void printCouldNotParseAirline() {
-    System.err.println("Could not parse airline from file");
-  }
-
-  private static void printCouldNotReadFile(String file) {
-    System.err.println("Could not read file '" + file + "'");
   }
 
   private static void writeAirlineToFile(String airlineName, String textFilePath) {
@@ -307,13 +283,9 @@ public class Project3 {
     try {
       textDumper.dump(airline);
     } catch (IOException e) {
-      printCouldNotWriteToFile();
-      exitWithOne();
+      Errors.printCouldNotWriteToFile();
+      Errors.exitWithOne();
     }
-  }
-
-  private static void printCouldNotWriteToFile() {
-    System.err.println("Could not write Airline info to file!");
   }
 
   private static TextDumper getTextDumper(String textFilePath) {
@@ -323,14 +295,10 @@ public class Project3 {
       TextDumper textDumper = new TextDumper(dataOutputStream);
       return textDumper;
     } catch (FileNotFoundException e) {
-      printCannotOpenFileError(textFilePath);
-      exitWithOne();
+      Errors.printCannotOpenFileError(textFilePath);
+      Errors.exitWithOne();
     }
     return null; // Execution should not reach here
-  }
-
-  private static void printCannotOpenFileError(String textFilePath) {
-    System.err.println("Could not open file '" + textFilePath + "' for some reason!");
   }
 
   private static String extractTextFilePath(ArrayList<String> argsList) {
@@ -381,14 +349,10 @@ public class Project3 {
     try {
       return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
     } catch (ParseException e) {
-      printFatalError();
-      exitWithOne();
+      Errors.printFatalError();
+      Errors.exitWithOne();
     }
     return null; // Execution should never get here
-  }
-
-  private static void printFatalError() {
-    System.err.println("Fatal Error!");
   }
 
   /**
@@ -440,35 +404,35 @@ public class Project3 {
   private static void checkArgsContainValidSrcAirportCode(String src) {
     if (!isValid_IATA_AirportCode(src)) {
       System.err.println("Invalid src '" + src + "'");
-      exitWithOne();
+      Errors.exitWithOne();
     }
   }
 
   private static void checkArgsContainValidDestAirportCode(String dest) {
     if (!isValid_IATA_AirportCode(dest)) {
       System.err.println("Invalid src '" + dest + "'");
-      exitWithOne();
+      Errors.exitWithOne();
     }
   }
 
   private static void checkArgsContainValidArriveTime(String arriveTime) {
     if (!isValidDateTime(arriveTime)) {
       System.err.println("Invalid arrive date time '" + arriveTime + "'");
-      exitWithOne();
+      Errors.exitWithOne();
     }
   }
 
   private static void checkArgsContainValidDepartTime(String departTime) {
     if (!isValidDateTime(departTime)) {
       System.err.println("Invalid depart date time '" + departTime + "'");
-      exitWithOne();
+      Errors.exitWithOne();
     }
   }
 
   private static void checkArgsContainValidFlightNumber(String flightNumber) {
     if (!isValidInt(flightNumber)) {
       System.err.println("Invalid flight number '" + flightNumber + "'");
-      exitWithOne();
+      Errors.exitWithOne();
     }
   }
 
@@ -538,19 +502,11 @@ public class Project3 {
     date.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]");
   }
 
-  private static void printInvalidOptionMessage() {
-    System.err.println("Invalid option");
-  }
-
   private static void checkForValidNumberOfArguments(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
-      printInvalidNumberOfArguments();
-      exitWithOne();
+      Errors.printInvalidNumberOfArguments();
+      Errors.exitWithOne();
     }
-  }
-
-  private static void printInvalidNumberOfArguments() {
-    System.err.println("Invalid number of arguments");
   }
 
   public static boolean containValidNumberOfArguments(ArrayList<String> argsList) {
@@ -559,14 +515,10 @@ public class Project3 {
 
   public static ArrayList<String> extractOptions(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
-      printCannotExtractOptionsError();
-      exitWithOne();
+      Errors.printCannotExtractOptionsError();
+      Errors.exitWithOne();
     }
     return new ArrayList<>(argsList.subList(0, argsList.size() - ARGUMENT_COUNT));
-  }
-
-  public static void printCannotExtractOptionsError() {
-    System.err.println("Command line arguments does not contain valid argument number. Hence, cannot extract options");
   }
 
 
@@ -583,20 +535,12 @@ public class Project3 {
       return Integer.parseInt(integer);
   }
 
-  private static void printMissingCommanLineArgumentsMessage() {
-    System.err.println("Missing command line arguments");
-  }
-
   private static void printUsage() {
     System.out.println(USAGE);
   }
 
   private static void exitWithZero() {
     System.exit(0);
-  }
-
-  private static void exitWithOne() {
-    System.exit(1);
   }
 
 }
