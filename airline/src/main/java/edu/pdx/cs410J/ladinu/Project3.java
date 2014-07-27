@@ -58,7 +58,6 @@ public class Project3 {
   private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
     if (argsList.isEmpty()) {
       Errors.printMissingCommanLineArgumentsError();
-      Errors.exitWithOne();
     }
   }
 
@@ -77,7 +76,6 @@ public class Project3 {
   private static void checkForValidOptions(ArrayList<String> argsList) {
     if (!containValidOptions(argsList)) {
       Errors.printInvalidOptionError();
-      Errors.exitWithOne();
     }
   }
 
@@ -167,7 +165,6 @@ public class Project3 {
   private static void exitIfFileIsStdoutForPretty(ArrayList<String> argsList) {
     if (isFilePathStdout((argsList))) {
       Errors.printPickPrintOrPrettyOptionError();
-      Errors.exitWithOne();
     }
   }
 
@@ -185,7 +182,6 @@ public class Project3 {
       pp.dump(airline);
     } catch (IOException e) {
       Errors.printUnableToPrettyPrintError();
-      Errors.exitWithOne();
     }
   }
 
@@ -200,7 +196,6 @@ public class Project3 {
         printStream = new PrintStream(file);
       } catch (FileNotFoundException e) {
         Errors.printUnableToOpenFileError();
-        Errors.exitWithOne();
         return null;
       }
     }
@@ -245,8 +240,7 @@ public class Project3 {
     if (fileExist(textFilePath)) {
       AbstractAirline abstractAirline = readAirlineFromFile(textFilePath);
       if (!abstractAirline.getName().equals(airlineName)) {
-        Errors.printAirlineNameInFileIsDifferent();
-        Errors.exitWithOne();
+        Errors.printAirlineNameInFileIsDifferentError();
       }
       AIRLINES.put(abstractAirline.getName(), (Airline)abstractAirline);
       addFlightToAirlines(argsList);
@@ -263,16 +257,14 @@ public class Project3 {
     try {
       inputStream = new FileInputStream(file);
     } catch (FileNotFoundException e) {
-      Errors.printCouldNotReadFile(file);
-      Errors.exitWithOne();
+      Errors.printCouldNotReadFileError(file);
     }
     DataInputStream dataInputStream = new DataInputStream(inputStream);
     TextParser parser = new TextParser(dataInputStream);
     try {
       return parser.parse();
     } catch (ParserException e) {
-      Errors.printCouldNotParseAirline();
-      Errors.exitWithOne();
+      Errors.printCouldNotParseAirlineError();
     }
     return null; // Execution should not get here
   }
@@ -283,8 +275,7 @@ public class Project3 {
     try {
       textDumper.dump(airline);
     } catch (IOException e) {
-      Errors.printCouldNotWriteToFile();
-      Errors.exitWithOne();
+      Errors.printCouldNotWriteToFileError();
     }
   }
 
@@ -296,7 +287,6 @@ public class Project3 {
       return textDumper;
     } catch (FileNotFoundException e) {
       Errors.printCannotOpenFileError(textFilePath);
-      Errors.exitWithOne();
     }
     return null; // Execution should not reach here
   }
@@ -350,7 +340,6 @@ public class Project3 {
       return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
     } catch (ParseException e) {
       Errors.printFatalError();
-      Errors.exitWithOne();
     }
     return null; // Execution should never get here
   }
@@ -403,36 +392,31 @@ public class Project3 {
 
   private static void checkArgsContainValidSrcAirportCode(String src) {
     if (!isValid_IATA_AirportCode(src)) {
-      System.err.println("Invalid src '" + src + "'");
-      Errors.exitWithOne();
+      Errors.printInvalidAirportCodeError(src);
     }
   }
 
   private static void checkArgsContainValidDestAirportCode(String dest) {
     if (!isValid_IATA_AirportCode(dest)) {
-      System.err.println("Invalid src '" + dest + "'");
-      Errors.exitWithOne();
+      Errors.printInvalidAirportCodeError(dest);
     }
   }
 
   private static void checkArgsContainValidArriveTime(String arriveTime) {
     if (!isValidDateTime(arriveTime)) {
-      System.err.println("Invalid arrive date time '" + arriveTime + "'");
-      Errors.exitWithOne();
+      Errors.printInvalidArriveDateTimeError(arriveTime);
     }
   }
 
   private static void checkArgsContainValidDepartTime(String departTime) {
     if (!isValidDateTime(departTime)) {
-      System.err.println("Invalid depart date time '" + departTime + "'");
-      Errors.exitWithOne();
+      Errors.printInvalidDepartDateTimeError(departTime);
     }
   }
 
   private static void checkArgsContainValidFlightNumber(String flightNumber) {
     if (!isValidInt(flightNumber)) {
-      System.err.println("Invalid flight number '" + flightNumber + "'");
-      Errors.exitWithOne();
+      Errors.printInvalidFlightNumberError(flightNumber);
     }
   }
 
@@ -504,8 +488,7 @@ public class Project3 {
 
   private static void checkForValidNumberOfArguments(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
-      Errors.printInvalidNumberOfArguments();
-      Errors.exitWithOne();
+      Errors.printInvalidNumberOfArgumentsError();
     }
   }
 
@@ -516,7 +499,6 @@ public class Project3 {
   public static ArrayList<String> extractOptions(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
       Errors.printCannotExtractOptionsError();
-      Errors.exitWithOne();
     }
     return new ArrayList<>(argsList.subList(0, argsList.size() - ARGUMENT_COUNT));
   }

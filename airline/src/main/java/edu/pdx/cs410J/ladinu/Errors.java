@@ -67,11 +67,46 @@ public class Errors {
     exitWithOne();
   }
 
+  public static void printInvalidAirportCodeError(String code) {
+    printInvalidAirportCode(code);
+    exitWithOne();
+  }
+
+  public static void printInvalidArriveDateTimeError(String arriveTime) {
+    printInvalidArriveDateTime(arriveTime);
+    exitWithOne();
+  }
+
+  public static void printInvalidDepartDateTimeError(String departTime) {
+    printInvalidDepartDateTime(departTime);
+    exitWithOne();
+  }
+
+  public static void printInvalidFlightNumberError(String flightNumber) {
+    printInvalidFlightNumber(flightNumber);
+    exitWithOne();
+  }
+
   public static void exitWithOne() {
     System.exit(1);
   }
 
 
+  //
+  // All of the following methods print some string to STDOUT
+  //
+
+  public static void printInvalidArriveDateTime(String arriveTime) {
+    System.err.println("Invalid arrive date time '" + arriveTime + "'");
+  }
+
+  public static void printInvalidFlightNumber(String flightNumber) {
+    System.err.println("Invalid flight number '" + flightNumber + "'");
+  }
+
+  public static void printInvalidDepartDateTime(String departTime) {
+    System.err.println("Invalid depart date time '" + departTime + "'");
+  }
 
   public static void printPickPrintOrPrettyOption() {
     System.err.println("Cannot print and pretty print at same time. Pick one option.");
@@ -124,4 +159,9 @@ public class Errors {
   public static void printMissingCommandLineArguments() {
     System.err.println("Missing command line arguments");
   }
+
+  public static void printInvalidAirportCode(String code) {
+    System.err.println("Invalid airport code '" + code + "'");
+  }
+
 }
