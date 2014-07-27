@@ -46,7 +46,7 @@ public class Project3 {
     ifNoCommandLineArgumentsGivenThenExitWithOne(argsList);
     checkForValidNumberOfArguments(argsList);
     checkForValidOptions(argsList);
-    handleOptions(argsList);
+    Handler.handleOptions(argsList);
     addFlightToAirlines(argsList);
     exitWithZero();
   }
@@ -55,7 +55,7 @@ public class Project3 {
    * Checks if arguments are empty or not. If arguments are empty, exit with 1.
    * @param argsList
    */
-  private static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
+  public static void ifNoCommandLineArgumentsGivenThenExitWithOne(List<String> argsList) {
     if (argsList.isEmpty()) {
       Errors.printMissingCommanLineArgumentsError();
     }
@@ -66,14 +66,14 @@ public class Project3 {
    * code 1
    * @param argsList
    */
-  private static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
+  public static void ifReadmeArgGivenThenPrintUsageAndExitWithZero(List<String> argsList) {
     if (argsList.contains("-README")) {
       printUsage();
       exitWithZero();
     }
   }
 
-  private static void checkForValidOptions(ArrayList<String> argsList) {
+  public static void checkForValidOptions(ArrayList<String> argsList) {
     if (!containValidOptions(argsList)) {
       Errors.printInvalidOptionError();
     }
@@ -115,66 +115,13 @@ public class Project3 {
     return true;
   }
 
-  /**
-   * This function is responsible for delegating control to other functions based on the
-   * arguments
-   * @param argsList
-   */
-  private static void handleOptions(ArrayList<String> argsList) {
-    checkForValidOptions(argsList);
-    HashMap<String, String> optMap = getOptionMap(argsList);
-    if (hasKey(optMap, "-print", "-textFile", "-pretty")) {
-      handlePrintAndTextFileAndPrettyOption(argsList);
-    } else if (hasKey(optMap, "-textFile", "-pretty")) {
-      handleTextFileAndPrettyOption(argsList);
-    } else if (hasKey(optMap, "-pretty", "-print")) {
-      handlePrettyAndPrintOption(argsList);
-    } else if (hasKey(optMap, "-print", "-textFile")) {
-      handlePrintAndTextFileOption(argsList);
-    } else if (hasKey(optMap, "-print")) {
-      handlePrintOption(argsList);
-    } else if (hasKey(optMap, "-textFile")) {
-      handleTextFileOption(argsList);
-    } else if (hasKey(optMap, "-pretty")) {
-      handlePretty(argsList);
-    }
-  }
-
-  private static void handlePrintAndTextFileAndPrettyOption(ArrayList<String> argsList) {
-    readWriteAirline(argsList);
-    exitIfFileIsStdoutForPretty(argsList);
-    prettyPrintToFile(argsList);
-    printFlight(argsList);
-    exitWithZero();
-  }
-
-  private static void handleTextFileAndPrettyOption(ArrayList<String> argsList) {
-    readWriteAirline(argsList);
-    prettyPrintToFile(argsList);
-    exitWithZero();
-  }
-
-  private static void handlePrettyAndPrintOption(ArrayList<String> argsList) {
-    exitIfFileIsStdoutForPretty(argsList);
-    addFlightToAirlines(argsList);
-    prettyPrintToFile(argsList);
-    printFlight(argsList);
-    exitWithZero();
-  }
-
-  private static void exitIfFileIsStdoutForPretty(ArrayList<String> argsList) {
+  public static void exitIfFileIsStdoutForPretty(ArrayList<String> argsList) {
     if (isFilePathStdout((argsList))) {
       Errors.printPickPrintOrPrettyOptionError();
     }
   }
 
-  private static void handlePretty(ArrayList<String> argsList) {
-    addFlightToAirlines(argsList);
-    prettyPrintToFile(argsList);
-    exitWithZero();
-  }
-
-  private static void prettyPrintToFile(ArrayList<String> argsList) {
+  public static void prettyPrintToFile(ArrayList<String> argsList) {
     PrettyPrinter pp = new PrettyPrinter(getPrintStream(argsList));
     String airlineName = extractName(argsList);
     Airline airline = AIRLINES.get(airlineName);
@@ -185,7 +132,7 @@ public class Project3 {
     }
   }
 
-  private static PrintStream getPrintStream(ArrayList<String> argsList) {
+  public static PrintStream getPrintStream(ArrayList<String> argsList) {
     PrintStream printStream;
     String filePath = extractPrettyPrinterFilePath(argsList);
     if (isFilePathStdout(argsList)) {
@@ -202,17 +149,17 @@ public class Project3 {
     return printStream;
   }
 
-  private static boolean isFilePathStdout(ArrayList<String> argsList) {
+  public static boolean isFilePathStdout(ArrayList<String> argsList) {
     String filePath = extractPrettyPrinterFilePath(argsList);
     return filePath.equals("-");
   }
 
-  private static String extractPrettyPrinterFilePath(ArrayList<String> argsList) {
+  public static String extractPrettyPrinterFilePath(ArrayList<String> argsList) {
     HashMap<String, String> optMap = getOptionMap(argsList);
     return optMap.get("-pretty");
   }
 
-  private static boolean hasKey(HashMap<String, String> optMap, String... keys) {
+  public static boolean hasKey(HashMap<String, String> optMap, String... keys) {
     boolean containAll = true;
     for (String key : keys) {
       if (!optMap.containsKey(key))
@@ -221,18 +168,7 @@ public class Project3 {
     return containAll;
   }
 
-  private static void handlePrintAndTextFileOption(ArrayList<String> argsList) {
-    readWriteAirline(argsList);
-    printFlight(argsList);
-    exitWithZero();
-  }
-
-  private static void handleTextFileOption(ArrayList<String> argsList) {
-    readWriteAirline(argsList);
-    exitWithZero();
-  }
-
-  private static void readWriteAirline(ArrayList<String> argsList) {
+  public static void readWriteAirline(ArrayList<String> argsList) {
     String textFilePath = extractTextFilePath(argsList);
     String airlineName = extractName(argsList);
 
@@ -252,7 +188,7 @@ public class Project3 {
     }
   }
 
-  private static AbstractAirline readAirlineFromFile(String file) {
+  public static AbstractAirline readAirlineFromFile(String file) {
     InputStream inputStream = null;
     try {
       inputStream = new FileInputStream(file);
@@ -269,7 +205,7 @@ public class Project3 {
     return null; // Execution should not get here
   }
 
-  private static void writeAirlineToFile(String airlineName, String textFilePath) {
+  public static void writeAirlineToFile(String airlineName, String textFilePath) {
     Airline airline = AIRLINES.get(airlineName);
     TextDumper textDumper = getTextDumper(textFilePath);
     try {
@@ -279,7 +215,7 @@ public class Project3 {
     }
   }
 
-  private static TextDumper getTextDumper(String textFilePath) {
+  public static TextDumper getTextDumper(String textFilePath) {
     try {
       OutputStream outputStream = new FileOutputStream(textFilePath);
       DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
@@ -291,12 +227,12 @@ public class Project3 {
     return null; // Execution should not reach here
   }
 
-  private static String extractTextFilePath(ArrayList<String> argsList) {
+  public static String extractTextFilePath(ArrayList<String> argsList) {
     HashMap<String, String> optMap = getOptionMap(argsList);
     return optMap.get("-textFile");
   }
 
-  private static HashMap<String, String> getOptionMap(ArrayList<String> argsList) {
+  public static HashMap<String, String> getOptionMap(ArrayList<String> argsList) {
     HashMap<String, String> optionMap = new HashMap<>();
     for(String opt: extractOptions(argsList)) {
       if (Arrays.asList(OPTIONS).contains(opt)) {
@@ -317,7 +253,7 @@ public class Project3 {
    * @param argsList
    * @return
    */
-  private static Flight getFlight(ArrayList<String> argsList) {
+  public static Flight getFlight(ArrayList<String> argsList) {
     ArrayList<String> args = extractArgs(argsList);
     String departTime = extractDepartTime(args);
     String arriveTime = extractArriveTime(args);
@@ -335,7 +271,7 @@ public class Project3 {
           parseDate(departTime), destAirport, parseDate(arriveTime));
   }
 
-  private static Date parseDate(String dateStr) {
+  public static Date parseDate(String dateStr) {
     try {
       return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
     } catch (ParseException e) {
@@ -349,7 +285,7 @@ public class Project3 {
    * arguments specified in <code>argsList</code>
    * @param argsList
    */
-  private static void addFlightToAirlines(ArrayList<String> argsList) {
+  public static void addFlightToAirlines(ArrayList<String> argsList) {
     String airlineName = extractName(argsList);
     Flight flight = getFlight(argsList);
 
@@ -366,55 +302,55 @@ public class Project3 {
     return new ArrayList<>(argsList.subList(argsList.size() - ARGUMENT_COUNT, argsList.size()));
   }
 
-  private static String extractArriveTime(ArrayList<String> argsList) {
+  public static String extractArriveTime(ArrayList<String> argsList) {
     return argsList.get(7) + " " + argsList.get(8) + " " + argsList.get(9);
   }
 
-  private static String extractDest(ArrayList<String> argsList) {
+  public static String extractDest(ArrayList<String> argsList) {
     return argsList.get(6);
   }
 
-  private static String extractDepartTime(ArrayList<String> argsList) {
+  public static String extractDepartTime(ArrayList<String> argsList) {
     return argsList.get(3) + " " + argsList.get(4) + " " + argsList.get(5);
   }
 
-  private static String extractSrc(ArrayList<String> argsList) {
+  public static String extractSrc(ArrayList<String> argsList) {
     return argsList.get(2);
   }
 
-  private static String extractFlightNumber(ArrayList<String> argsList) {
+  public static String extractFlightNumber(ArrayList<String> argsList) {
     return argsList.get(1);
   }
 
-  private static String extractName(ArrayList<String> argsList) {
+  public static String extractName(ArrayList<String> argsList) {
     return extractArgs(argsList).get(0);
   }
 
-  private static void checkArgsContainValidSrcAirportCode(String src) {
+  public static void checkArgsContainValidSrcAirportCode(String src) {
     if (!isValid_IATA_AirportCode(src)) {
       Errors.printInvalidAirportCodeError(src);
     }
   }
 
-  private static void checkArgsContainValidDestAirportCode(String dest) {
+  public static void checkArgsContainValidDestAirportCode(String dest) {
     if (!isValid_IATA_AirportCode(dest)) {
       Errors.printInvalidAirportCodeError(dest);
     }
   }
 
-  private static void checkArgsContainValidArriveTime(String arriveTime) {
+  public static void checkArgsContainValidArriveTime(String arriveTime) {
     if (!isValidDateTime(arriveTime)) {
       Errors.printInvalidArriveDateTimeError(arriveTime);
     }
   }
 
-  private static void checkArgsContainValidDepartTime(String departTime) {
+  public static void checkArgsContainValidDepartTime(String departTime) {
     if (!isValidDateTime(departTime)) {
       Errors.printInvalidDepartDateTimeError(departTime);
     }
   }
 
-  private static void checkArgsContainValidFlightNumber(String flightNumber) {
+  public static void checkArgsContainValidFlightNumber(String flightNumber) {
     if (!isValidInt(flightNumber)) {
       Errors.printInvalidFlightNumberError(flightNumber);
     }
@@ -426,12 +362,7 @@ public class Project3 {
   }
 
 
-  private static void handlePrintOption(ArrayList<String> argsList) {
-    addFlightToAirlines(argsList);
-    printFlight(argsList);
-  }
-
-  private static void printFlight(ArrayList<String> argsList) {
+  public static void printFlight(ArrayList<String> argsList) {
     System.out.println(getFlight(argsList).toString());
   }
 
@@ -486,7 +417,7 @@ public class Project3 {
     date.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]");
   }
 
-  private static void checkForValidNumberOfArguments(ArrayList<String> argsList) {
+  public static void checkForValidNumberOfArguments(ArrayList<String> argsList) {
     if (!containValidNumberOfArguments(argsList)) {
       Errors.printInvalidNumberOfArgumentsError();
     }
@@ -517,11 +448,11 @@ public class Project3 {
       return Integer.parseInt(integer);
   }
 
-  private static void printUsage() {
+  public static void printUsage() {
     System.out.println(USAGE);
   }
 
-  private static void exitWithZero() {
+  public static void exitWithZero() {
     System.exit(0);
   }
 
