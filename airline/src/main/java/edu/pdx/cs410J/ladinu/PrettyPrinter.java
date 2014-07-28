@@ -5,13 +5,13 @@ import edu.pdx.cs410J.AirlineDumper;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Writer;
 
 public class PrettyPrinter implements AirlineDumper{
 
-  PrintStream printStream;
-
-  public PrettyPrinter(PrintStream printStream) {
-    this.printStream = printStream;
+  Writer writer;
+  public PrettyPrinter(Writer writer) {
+    this.writer = writer;
   }
   /**
    * Dumps an airline to some destination.
@@ -22,8 +22,8 @@ public class PrettyPrinter implements AirlineDumper{
   @Override
   public void dump(AbstractAirline airline) throws IOException {
     Airline airline1 = (Airline) airline;
-    printStream.write(airline1.toJSON().getBytes());
-    printStream.flush();
-    printStream.close();
+    writer.write(airline1.toJSON());
+    writer.flush();
+    writer.close();
   }
 }

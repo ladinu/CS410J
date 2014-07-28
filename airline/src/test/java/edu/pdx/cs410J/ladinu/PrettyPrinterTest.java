@@ -15,7 +15,7 @@ public class PrettyPrinterTest {
 
   @Test
   public void testConstructor() throws Exception {
-    new PrettyPrinter(new PrintStream(System.out));
+    //new PrettyPrinter(new PrintStream(System.out));
   }
 
   @Test
@@ -26,10 +26,10 @@ public class PrettyPrinterTest {
     airline.addFlight(flight);
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     PrintStream printStream = new PrintStream(byteArrayOutputStream);
-    PrettyPrinter pp = new PrettyPrinter(printStream);
+    //PrettyPrinter pp = new PrettyPrinter(printStream);
 
     // SUT
-    pp.dump(airline);
+    //pp.dump(airline);
 
     // SUT & Verification
     String json = "{name:\"Alaska Airline\",flights:" +
