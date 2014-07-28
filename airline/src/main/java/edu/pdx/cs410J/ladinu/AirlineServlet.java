@@ -6,9 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AirlineServlet extends HttpServlet {
   private final Map<String, Airline> airlineMap = new HashMap<>();
@@ -19,10 +17,34 @@ public class AirlineServlet extends HttpServlet {
   {
     response.setContentType( "text/plain" );
     String airlineName = getParameter("name", request);
-    if (airlineName != null) {
+    String srcAirport = getParameter("src", request);
+    String destAirport = getParameter("dest", request);
+
+
+    if (airlineName != null && (srcAirport == null && destAirport == null)) {
       writeAirline(airlineName, response);
     } else {
-      missingRequiredParameter(response, "name");
+      Map<String, String> map = new HashMap<>();
+      map.put("name", airlineName);
+      map.put(FlightValidator.SRC_KEY, srcAirport);
+      map.put(FlightValidator.DEST_KEY, destAirport);
+
+      for (String key : map.keySet()) {
+        if (map.get(key) == null) {
+          missingRequiredParameter(response, key);
+          return;
+        }
+      }
+      try {
+        FlightValidator.getSrcAirport(map);
+        FlightValidator.getDestAirport(map);
+      } catch (FlightValidatorException e) {
+        PrintWriter pw = response.getWriter();
+        pw.println(e.getMessage());
+        pw.flush();
+        response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+      }
+      writeAirline(response, airlineName, srcAirport, destAirport);
     }
   }
 
@@ -31,6 +53,7 @@ public class AirlineServlet extends HttpServlet {
   {
     response.setContentType( "text/plain" );
 
+    String airline = getParameter("name", request);
     String number = getParameter(FlightValidator.NUMBER_KEY, request);
     String src = getParameter(FlightValidator.SRC_KEY, request);
     String departDate = getParameter(FlightValidator.DEPART_DATE_KEY, request);
@@ -42,6 +65,7 @@ public class AirlineServlet extends HttpServlet {
     String arriveTimeAmPm  = getParameter(FlightValidator.ARRIVE_TIME_AM_PM_KEY, request);
 
     Map<String, String> map = new HashMap<>();
+    map.put("name", airline);
     map.put(FlightValidator.NUMBER_KEY, number);
     map.put(FlightValidator.SRC_KEY, src);
     map.put(FlightValidator.DEPART_DATE_KEY, departDate);
@@ -55,19 +79,24 @@ public class AirlineServlet extends HttpServlet {
     for (String key : map.keySet()) {
       if (map.get(key) == null) {
         missingRequiredParameter(response, key);
-        break;
+        return;
       }
     }
 
     try {
       Flight flight = FlightValidator.getFlight(map);
-      if (airlineMap.get("Alaska") != null) {
-        airlineMap.get("Alaska").addFlight(flight);
+      if (airlineMap.get(airline) != null)  {
+        airlineMap.get(airline).addFlight(flight);
       } else {
-        airlineMap.put("Alaska", new Airline("Alaska"));
-        airlineMap.get("Alaska").addFlight(flight);
+        airlineMap.put(airline, new Airline(airline));
+        airlineMap.get(airline).addFlight(flight);
       }
+      response.setStatus( HttpServletResponse.SC_OK);
     } catch (FlightValidatorException e) {
+      PrintWriter pw = response.getWriter();
+      pw.println(e.getMessage());
+      pw.flush();
+      response.setStatus( HttpServletResponse.SC_PRECONDITION_FAILED );
       e.printStackTrace();
     }
   }
@@ -91,6 +120,34 @@ public class AirlineServlet extends HttpServlet {
       PrettyPrinter pp = new PrettyPrinter(response.getWriter());
       pp.dump(airline);
       response.setStatus( HttpServletResponse.SC_OK );
+    }
+  }
+
+  private void writeAirline(HttpServletResponse response, String airlineName, String srcAirport, String destAirport) throws IOException {
+    Airline airline = this.airlineMap.get(airlineName);
+    if (airline != null) {
+      ArrayList<Flight> flights = new ArrayList<>();
+      for (Object o : airline.getFlights()) {
+        Flight f = (Flight)o;
+        if (f.getDestination().equals(destAirport) && f.getSource().equals(srcAirport)) {
+          flights.add(f);
+        }
+      }
+      if (flights.isEmpty()) {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        return;
+      }
+      PrintWriter pw = response.getWriter();
+      pw.print("[");
+      Iterator iterator = flights.iterator();
+      while (iterator.hasNext()) {
+        pw.print(((Flight) iterator.next()).toJSON());
+        if (iterator.hasNext())
+          pw.append(",\n");
+      }
+      pw.append("]");
+    } else {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
   }
 

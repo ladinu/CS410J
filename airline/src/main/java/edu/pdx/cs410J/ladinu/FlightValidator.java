@@ -2,7 +2,6 @@ package edu.pdx.cs410J.ladinu;
 
 import edu.pdx.cs410J.AirportNames;
 
-import javax.xml.bind.ValidationException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,10 +59,10 @@ public class FlightValidator {
       if (AirportNames.getNamesMap().get(src) != null) {
         return src;
       } else {
-        throw new FlightValidatorException("invalid src airport code");
+        throw new FlightValidatorException("invalid dest airport code");
       }
     } else {
-      throw new FlightValidatorException("could not find src airport in params");
+      throw new FlightValidatorException("could not find dest airport in params");
     }
   }
 
