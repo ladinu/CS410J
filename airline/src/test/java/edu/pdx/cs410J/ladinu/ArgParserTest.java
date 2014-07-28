@@ -1,5 +1,7 @@
 package edu.pdx.cs410J.ladinu;
 
+import com.sun.org.apache.xpath.internal.Arg;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +36,15 @@ public class ArgParserTest {
   }
 
   @Test
+  public void shouldPrintReadMeIfReadmeOptionGiven() throws Exception {
+    stdout.clear();
+    exit.expectSystemExitWithStatus(CLEAN_EXIT);
+    ArrayList<String> args = new ArrayList<>();
+    args.add("-README");
+    ArgParser.parse(args);
+    assertEquals(ArgParser.README_INFO, stdout.getLog());
+  }
+  @Test
   public void shouldExitIfArgsAreLessThanMinimum() throws Exception {
     assertError("Invalid number of arguments");
     ArgParser.parse(toList("-host localhost -port"));
@@ -66,21 +77,50 @@ public class ArgParserTest {
     ArgParser.parse(toList("-host i -port 80 -search Alaska PDX FOO"));
   }
 
-  @Ignore
-  @Test
-  public void caseShoudlNotMatterForDestAndSrcAirportCodesForSearchOption() throws Exception {
-    String arguments = "-host i -port 80 -search Alaska pDX lAx";
-    List<String> keys  =  toList("host port search name src dest");
-    List<String> values = toList("i 80 true Alaska pDX lAx");
-    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
-  }
-
-  @Ignore
   @Test
   public void shouldReturnMapWithSearchOption() throws Exception {
     String arguments = "-host i -port 80 -search Alaska PDX LAX";
     List<String> keys  =  toList("host port search name src dest");
     List<String> values = toList("i 80 true Alaska PDX LAX");
+    Map<String, String> parse = ArgParser.parse(toList(arguments));
+    HashMap<String, String> map = getMap(keys, values);
+    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
+  }
+
+  @Test
+  public void caseShoudlNotMatterForDestAndSrcAirportCodesForSearchOption() throws Exception {
+    String arguments = "-host i -port 80 -search Alaska pDX lAx";
+    List<String> keys  =  toList("host port search name src dest");
+    List<String> values = toList("i 80 true Alaska PDX LAX");
+    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
+  }
+
+  @Test
+  public void shouldParseSearchAndPrintOption() throws Exception {
+    String arguments = "-host i -port 80 -print -search Alaska PDX LAX";
+    Map<String, String> map = ArgParser.parse(toList(arguments));
+    assertTrue(map.containsKey("search") && map.containsKey("print"));
+
+    arguments = "-host i -port 80 -search -print Alaska PDX LAX";
+    map = ArgParser.parse(toList(arguments));
+    assertTrue(map.containsKey("search") && map.containsKey("print"));
+  }
+
+  @Test
+  public void shouldParseArguments() throws Exception {
+    String arguments = "-host i -port 80 Alaska 2 PDX 3/12/2014 9:15 PM LAX 3/12/2014 12:00 AM";
+    List<String> keys = toList("host port name number src departDate departTime departTimeAmPm " +
+        "dest arriveDate arriveTime arriveTimeAmPm");
+    List<String> values = toList("i 80 Alaska 2 PDX 3/12/2014 9:15 PM " +
+        "LAX 3/12/2014 12:00 AM");
+    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
+  }
+
+  @Test
+  public void shouldParseArgumentsPartially() throws Exception {
+    String arguments = "-host i -port 80 Alaska 2 PDX 3/12/2014 9:15 PM";
+    List<String> keys = toList("host port name number src departDate departTime departTimeAmPm");
+    List<String> values = toList("i 80 Alaska 2 PDX 3/12/2014 9:15 PM");
     assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
   }
 
