@@ -1,8 +1,5 @@
 package edu.pdx.cs410J.ladinu;
 
-import com.sun.org.apache.xpath.internal.Arg;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.Assertion;

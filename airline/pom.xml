@@ -77,7 +77,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>edu.pdx.cs410J.ladinu.Project3</mainClass>
+              <mainClass>edu.pdx.cs410J.ladinu.Project4</mainClass>
             </manifest>
           </archive>
         </configuration>
