@@ -12,8 +12,6 @@ public class Project4 {
   public static void main(String[] args) {
   }
 
-
-
   public static Date parseDate(String dateStr) {
     try {
       return new SimpleDateFormat("MM/dd/yyyy hh:mm a").parse(dateStr);
@@ -22,8 +20,6 @@ public class Project4 {
     }
     return null; // Execution should never get here
   }
-
-
 
   public static void checkArgsContainValidArriveTime(String arriveTime) {
     if (!isValidDateTime(arriveTime)) {
