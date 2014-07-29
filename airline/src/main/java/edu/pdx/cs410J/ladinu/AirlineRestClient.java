@@ -3,6 +3,8 @@ package edu.pdx.cs410J.ladinu;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Map;
 
@@ -30,8 +32,14 @@ public class AirlineRestClient extends HttpRequestHelper
     {
         String hostName = map.get(ArgParser.HOST_OPTION_KEY);
         String port = map.get(ArgParser.PORT_OPTION_KEY);
-        this.url = MessageFormat.format(
-            "http://{0}:{1}/{2}/{3}?name={4}", hostName, port, WEB_APP, SERVLET, map.get("name"));
+        String name = map.get(ArgParser.NAME_ARG_KEY);
+        try {
+          name = URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          Project4.error(e.getMessage());
+        }
+      this.url = MessageFormat.format(
+            "http://{0}:{1}/{2}/{3}?name={4}", hostName, port, WEB_APP, SERVLET, name);
     }
 
     /**

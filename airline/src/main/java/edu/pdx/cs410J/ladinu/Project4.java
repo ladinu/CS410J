@@ -128,7 +128,7 @@ public class Project4 {
       }
   }
 
-  private static void error( String message )
+  public static void error( String message )
   {
       PrintStream err = System.err;
       err.println("** " + message);
