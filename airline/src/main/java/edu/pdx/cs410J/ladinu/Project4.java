@@ -55,16 +55,35 @@ public class Project4 {
   }
 
   public static void handleArguments(Map<String, String> map) {
-    // Validate the arguments
+    postFlight(map);
+    exitWithZero();
+  }
+
+
+  public static void handleSearchOption(Map<String, String> map) {
+    if (hasKey(map, ArgParser.SEARCH_OPTION_KEY)) {
+    }
+  }
+
+  public static void handlePrintOption(Map<String, String> map) {
+    if (hasKey(map, ArgParser.PRINT_OPTION_KEY)) {
+      HttpRequestHelper.Response res = postFlight(map);
+      System.out.println(res.getContent());
+      exitWithZero();
+    }
+  }
+
+  public static HttpRequestHelper.Response postFlight(Map<String, String> map) {
     validateArguments(map);
     AirlineRestClient client = new AirlineRestClient(map);
     HttpRequestHelper.Response response;
     try {
       response = client.postFlight(map);
       checkResponseCode( HttpURLConnection.HTTP_OK, response);
+      return response;
     } catch ( IOException ex ) {
       error("While contacting server: " + ex);
-      return;
+      return null;
     }
   }
 
@@ -76,22 +95,14 @@ public class Project4 {
     }
   }
 
-  public static void handleSearchOption(Map<String, String> map) {
-    if (hasKey(map, ArgParser.SEARCH_OPTION_KEY)) {
-
-    }
-  }
-
-  public static void handlePrintOption(Map<String, String> map) {
-    if (hasKey(map, ArgParser.PRINT_OPTION_KEY)) {
-
-    }
-  }
-
   public static void exitIfSearchAndPrintOptionsAreBothGiven(Map<String, String> map) {
     if (hasKey(map, ArgParser.SEARCH_OPTION_KEY) && hasKey(map, ArgParser.PRINT_OPTION_KEY)) {
       Errors.printCannotSearchAndPrintAtTheSameTimeError();
     }
+  }
+
+  public static void exitWithZero() {
+    System.exit(0);
   }
 
   /**

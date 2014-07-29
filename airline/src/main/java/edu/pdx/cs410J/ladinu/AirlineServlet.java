@@ -92,6 +92,9 @@ public class AirlineServlet extends HttpServlet {
         airlineMap.get(airline).addFlight(flight);
       }
       response.setStatus( HttpServletResponse.SC_OK);
+      PrintWriter pw = response.getWriter();
+      pw.println(flight.toString());
+      pw.flush();
     } catch (FlightValidatorException e) {
       PrintWriter pw = response.getWriter();
       pw.println(e.getMessage());
