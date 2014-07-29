@@ -53,6 +53,11 @@ public class Errors {
     exitWithOne();
   }
 
+  public static void printCannotSearchAndPrintAtTheSameTimeError() {
+    printCannotSearchAndPrintAtTheSameTime();
+    exitWithOne();
+  }
+
   public static void exitWithOne() {
     System.exit(1);
   }
@@ -100,5 +105,9 @@ public class Errors {
 
   private static void printHostAndPortOptionRequired() {
     System.err.println("Options -host and -port required");
+  }
+
+  private static void printCannotSearchAndPrintAtTheSameTime() {
+    System.err.println("cannot search and print at the same time");
   }
 }

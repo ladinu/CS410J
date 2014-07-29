@@ -29,11 +29,16 @@ public class ArgParser {
       "if you use -textFile and -pretty option for the same file.";
 
   public static final String SEARCH_OPTION = "-search";
+  public static final String SEARCH_OPTION_KEY = "search";
   public static final int SEARCH_OPTION_ARG_COUNT = 4;
   public static final String HOST_OPTION = "-host";
+  public static final String HOST_OPTION_KEY = "host";
   public static final String PORT_OPTION = "-port";
+  public static final String PORT_OPTION_KEY = "port";
   public static final String README_OPTION = "-README";
   public static final String PRINT_OPTION = "-print";
+  public static final String PRINT_OPTION_KEY = "print";
+  public static final String NAME_ARG_KEY = "name";
   public static final int NAME_INDEX = 0;
   public static final int NUMBER_INDEX = 1;
   public static final int SRC_INDEX = 2;
@@ -71,8 +76,8 @@ public class ArgParser {
   }
 
   public static void putHostAndPortInMap(ArrayList<String> args, Map<String, String> map) {
-    map.put("host", args.get(getHostIndex(args)));
-    map.put("port", args.get(getPortIndex(args)));
+    map.put(HOST_OPTION_KEY, args.get(getHostIndex(args)));
+    map.put(PORT_OPTION_KEY, args.get(getPortIndex(args)));
   }
 
   public static void clearHostAndPortFromArgs(ArrayList<String> args) {
@@ -88,10 +93,10 @@ public class ArgParser {
 
   public static void putSearchOptionsInMap(ArrayList<String> args, Map<String, String> map) {
     exitIfInvalidNumberOfArgsForSearchOption(args);
-    map.put("search", "true");
+    map.put(SEARCH_OPTION_KEY, "_");
     map.put("name", getAirlineNameForSearchOption(args));
-    map.put("src", getSrcAirportForSearchOption(args));
-    map.put("dest", getDestAirportForSearchOption(args));
+    map.put(FlightValidator.SRC_KEY, getSrcAirportForSearchOption(args));
+    map.put(FlightValidator.DEST_KEY, getDestAirportForSearchOption(args));
   }
 
   public static void clearSearchOptionFromArgs(ArrayList<String> args) {
@@ -102,28 +107,28 @@ public class ArgParser {
     if (hasName(args))
       map.put("name", getAirlineName(args));
     if (hasNumber(args))
-      map.put("number", getAirlineNumber(args));
+      map.put(FlightValidator.NUMBER_KEY, getAirlineNumber(args));
     if (hasSrc(args))
-      map.put("src", getSrcAirport(args));
+      map.put(FlightValidator.SRC_KEY, getSrcAirport(args));
     if (hasDepartDate(args))
-      map.put("departDate", getDepartDate(args));
+      map.put(FlightValidator.DEPART_DATE_KEY, getDepartDate(args));
     if (hasDepartTime(args))
-      map.put("departTime", getDepartTime(args));
+      map.put(FlightValidator.DEPART_TIME_KEY, getDepartTime(args));
     if (hasDepartTimeAmPm(args))
-      map.put("departTimeAmPm", getDepartTimeAmPm(args));
+      map.put(FlightValidator.DEPART_TIME_AM_PM_KEY, getDepartTimeAmPm(args));
     if (hasDest(args))
-      map.put("dest", getDestAirport(args));
+      map.put(FlightValidator.DEST_KEY, getDestAirport(args));
     if (hasArriveDate(args))
-      map.put("arriveDate", getArriveDate(args));
+      map.put(FlightValidator.ARRIVE_DATE_KEY, getArriveDate(args));
     if (hasArriveTime(args))
-      map.put("arriveTime", getArriveTime(args));
+      map.put(FlightValidator.ARRIVE_TIME_KEY, getArriveTime(args));
     if (hasArriveTimeAmPm(args))
-      map.put("arriveTimeAmPm", getArriveTimeAmPm(args));
+      map.put(FlightValidator.ARRIVE_TIME_AM_PM_KEY, getArriveTimeAmPm(args));
   }
 
 
   public static void putPrintOptionsInMap(ArrayList<String> args, Map<String, String> map) {
-    map.put("print", "true");
+    map.put(PRINT_OPTION_KEY, "_");
   }
 
   public static void clearPrintOptionFromArgs(ArrayList<String> args) {
@@ -169,11 +174,19 @@ public class ArgParser {
   }
 
   public static boolean hasSearchOption(ArrayList args) {
-    return args.get(0).equals(SEARCH_OPTION) || args.get(1).equals(SEARCH_OPTION);
+    try {
+      return args.get(0).equals(SEARCH_OPTION) || args.get(1).equals(SEARCH_OPTION);
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
   }
 
   public static boolean hasPrintOption(ArrayList args) {
-    return args.get(0).equals(PRINT_OPTION) || args.get(1).equals(PRINT_OPTION);
+    try {
+      return args.get(0).equals(PRINT_OPTION) || args.get(1).equals(PRINT_OPTION);
+    } catch (IndexOutOfBoundsException e) {
+      return false;
+    }
   }
 
   public static boolean hasName(ArrayList args) {
@@ -253,19 +266,11 @@ public class ArgParser {
   }
 
   public static String getSrcAirport(ArrayList<String> args) {
-    String srcAirport = args.get(SRC_INDEX).toUpperCase();
-    if (!AirportNames.getNamesMap().containsKey(srcAirport)) {
-      Errors.printInvalidSrcAirportCodeError();
-    }
-    return srcAirport;
+    return args.get(SRC_INDEX);
   }
 
   public static String getSrcAirportForSearchOption(ArrayList<String> args) {
-    String srcAirport = args.get(SRC_INDEX_FOR_SEARCH_OPTION).toUpperCase();
-    if (!AirportNames.getNamesMap().containsKey(srcAirport)) {
-      Errors.printInvalidSrcAirportCodeError();
-    }
-    return srcAirport;
+   return args.get(SRC_INDEX_FOR_SEARCH_OPTION);
   }
 
   public static String getDepartDate(ArrayList<String> args) {
@@ -281,19 +286,11 @@ public class ArgParser {
   }
 
   public static String getDestAirport(ArrayList<String> args) {
-    String destAirport = args.get(DEST_INDEX).toUpperCase();
-    if (!AirportNames.getNamesMap().containsKey(destAirport)) {
-      Errors.printInvalidDestAirportCodeError();
-    }
-    return destAirport;
+    return args.get(DEST_INDEX);
   }
 
   public static String getDestAirportForSearchOption(ArrayList<String> args) {
-    String destAirport = args.get(DEST_INDEX_FOR_SEARCH_OPTION).toUpperCase();
-    if (!AirportNames.getNamesMap().containsKey(destAirport)) {
-      Errors.printInvalidDestAirportCodeError();
-    }
-    return destAirport;
+    return args.get(DEST_INDEX_FOR_SEARCH_OPTION);
   }
 
   public static String getArriveDate(ArrayList<String> args) {

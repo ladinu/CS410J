@@ -5,6 +5,9 @@ import edu.pdx.cs410J.web.HttpRequestHelper;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * The main class that parses the command line and communicates with the
@@ -12,118 +15,136 @@ import java.net.HttpURLConnection;
  */
 public class Project4 {
 
-    public static final String MISSING_ARGS = "Missing command line arguments";
+  public static final String MISSING_ARGS = "Missing command line arguments";
 
-    public static void main(String... args) {
-        String hostName = null;
-        String portString = null;
-        String key = null;
-        String value = null;
+  public static void main(String... args) {
 
-        for (String arg : args) {
-            if (hostName == null) {
-                hostName = arg;
+    Map<String, String> map = ArgParser.parse(new ArrayList<String>(Arrays.asList(args)));
+    exitIfSearchAndPrintOptionsAreBothGiven(map);
+    handlePrintOption(map);
+    handleSearchOption(map);
+    handleArguments(map);
 
-            } else if ( portString == null) {
-                portString = arg;
+//    AirlineRestClient client = new AirlineRestClient(hostName, port);
+//
+//    HttpRequestHelper.Response response;
+//    try {
+//        if (key == null) {
+//            // Print all key/value pairs
+//            response = client.getAllKeysAndValues();
+//
+//        } else if (value == null) {
+//            // Print all values of key
+//            response = client.getValues(key);
+//
+//        } else {
+//            // Post the key/value pair
+//            response = client.addKeyValuePair(key, value);
+//        }
+//
+//        checkResponseCode( HttpURLConnection.HTTP_OK, response);
+//
+//    } catch ( IOException ex ) {
+//        error("While contacting server: " + ex);
+//        return;
+//    }
+//
+//    System.out.println(response.getContent());
+//
+//    System.exit(0);
+  }
 
-            } else if (key == null) {
-                key = arg;
-
-            } else if (value == null) {
-                value = arg;
-
-            } else {
-                usage("Extraneous command line argument: " + arg);
-            }
-        }
-
-        if (hostName == null) {
-            usage( MISSING_ARGS );
-
-        } else if ( portString == null) {
-            usage( "Missing port" );
-        }
-
-        int port;
-        try {
-            port = Integer.parseInt( portString );
-            
-        } catch (NumberFormatException ex) {
-            usage("Port \"" + portString + "\" must be an integer");
-            return;
-        }
-
-        AirlineRestClient client = new AirlineRestClient(hostName, port);
-
-        HttpRequestHelper.Response response;
-        try {
-            if (key == null) {
-                // Print all key/value pairs
-                response = client.getAllKeysAndValues();
-
-            } else if (value == null) {
-                // Print all values of key
-                response = client.getValues(key);
-
-            } else {
-                // Post the key/value pair
-                response = client.addKeyValuePair(key, value);
-            }
-
-            checkResponseCode( HttpURLConnection.HTTP_OK, response);
-
-        } catch ( IOException ex ) {
-            error("While contacting server: " + ex);
-            return;
-        }
-
-        System.out.println(response.getContent());
-
-        System.exit(0);
+  public static void handleArguments(Map<String, String> map) {
+    // Validate the arguments
+    validateArguments(map);
+    AirlineRestClient client = new AirlineRestClient(map);
+    HttpRequestHelper.Response response;
+    try {
+      response = client.postFlight(map);
+      checkResponseCode( HttpURLConnection.HTTP_OK, response);
+    } catch ( IOException ex ) {
+      error("While contacting server: " + ex);
+      return;
     }
+  }
 
-    /**
-     * Makes sure that the give response has the expected HTTP status code
-     * @param code The expected status code
-     * @param response The response from the server
-     */
-    private static void checkResponseCode( int code, HttpRequestHelper.Response response )
-    {
-        if (response.getCode() != code) {
-            error(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
-                                response.getCode(), response.getContent()));
-        }
+  public static void validateArguments(Map<String, String> map) {
+    try {
+      FlightValidator.getFlight(map);
+    } catch (FlightValidatorException e) {
+      error(e.getMessage());
     }
+  }
 
-    private static void error( String message )
-    {
-        PrintStream err = System.err;
-        err.println("** " + message);
+  public static void handleSearchOption(Map<String, String> map) {
+    if (hasKey(map, ArgParser.SEARCH_OPTION_KEY)) {
 
-        System.exit(1);
     }
+  }
 
-    /**
-     * Prints usage information for this program and exits
-     * @param message An error message to print
-     */
-    private static void usage( String message )
-    {
-        PrintStream err = System.err;
-        err.println("** " + message);
-        err.println();
-        err.println("usage: java Project4 host port [key] [value]");
-        err.println("  host    Host of web server");
-        err.println("  port    Port of web server");
-        err.println("  key     Key to query");
-        err.println("  value   Value to add to server");
-        err.println();
-        err.println("This simple program posts key/value pairs to the server");
-        err.println("If no value is specified, then all values are printed");
-        err.println("If no key is specified, all key/value pairs are printed");
-        err.println();
+  public static void handlePrintOption(Map<String, String> map) {
+    if (hasKey(map, ArgParser.PRINT_OPTION_KEY)) {
 
-        System.exit(1);
     }
+  }
+
+  public static void exitIfSearchAndPrintOptionsAreBothGiven(Map<String, String> map) {
+    if (hasKey(map, ArgParser.SEARCH_OPTION_KEY) && hasKey(map, ArgParser.PRINT_OPTION_KEY)) {
+      Errors.printCannotSearchAndPrintAtTheSameTimeError();
+    }
+  }
+
+  /**
+   * For a given map, check if given key is in it
+   * @param map Some map
+   * @param key The key to check
+   * @return true if key is in map
+   */
+  public static boolean hasKey(Map<String, String> map, String key) {
+    return map.get(key) != null;
+  }
+
+  /**
+   * Makes sure that the give response has the expected HTTP status code
+   * @param code The expected status code
+   * @param response The response from the server
+   */
+  private static void checkResponseCode( int code, HttpRequestHelper.Response response )
+  {
+      if (response.getCode() != code) {
+          error(String.format("Expected HTTP code %d, got code %d.\n\n%s", code,
+                              response.getCode(), response.getContent()));
+      }
+  }
+
+  private static void error( String message )
+  {
+      PrintStream err = System.err;
+      err.println("** " + message);
+
+      System.exit(1);
+  }
+
+  /**
+   * Prints usage information for this program and exits
+   * @param message An error message to print
+   */
+  private static void usage( String message )
+  {
+      PrintStream err = System.err;
+      err.println("** " + message);
+      err.println();
+      err.println("usage: java Project4 host port [key] [value]");
+      err.println("  host    Host of web server");
+      err.println("  port    Port of web server");
+      err.println("  key     Key to query");
+      err.println("  value   Value to add to server");
+      err.println();
+      err.println("This simple program posts key/value pairs to the server");
+      err.println("If no value is specified, then all values are printed");
+      err.println("If no key is specified, all key/value pairs are printed");
+      err.println();
+
+      System.exit(1);
+  }
 }

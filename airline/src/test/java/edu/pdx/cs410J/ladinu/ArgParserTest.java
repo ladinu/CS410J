@@ -63,32 +63,10 @@ public class ArgParserTest {
   }
 
   @Test
-  public void shoudlExitIfInvalidSrcForSearchOption() throws Exception {
-    assertError("Invalid src airport code");
-    ArgParser.parse(toList("-host i -port 80 -search Alaska foo PDX"));
-  }
-
-  @Test
-  public void shoudlExitIfInvalidDestForSearchOption() throws Exception {
-    assertError("Invalid dest airport code");
-    ArgParser.parse(toList("-host i -port 80 -search Alaska PDX FOO"));
-  }
-
-  @Test
   public void shouldReturnMapWithSearchOption() throws Exception {
     String arguments = "-host i -port 80 -search Alaska PDX LAX";
     List<String> keys  =  toList("host port search name src dest");
-    List<String> values = toList("i 80 true Alaska PDX LAX");
-    Map<String, String> parse = ArgParser.parse(toList(arguments));
-    HashMap<String, String> map = getMap(keys, values);
-    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
-  }
-
-  @Test
-  public void caseShoudlNotMatterForDestAndSrcAirportCodesForSearchOption() throws Exception {
-    String arguments = "-host i -port 80 -search Alaska pDX lAx";
-    List<String> keys  =  toList("host port search name src dest");
-    List<String> values = toList("i 80 true Alaska PDX LAX");
+    List<String> values = toList("i 80 _ Alaska PDX LAX");
     assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
   }
 
@@ -121,6 +99,13 @@ public class ArgParserTest {
     assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
   }
 
+  @Test
+  public void shouldParseUpToHostAndPort() throws Exception {
+    String arguments = "-host i -port 80";
+    List<String> keys = toList("host port");
+    List<String> values = toList("i 80 ");
+    assertEqual(getMap(keys, values), ArgParser.parse(toList(arguments)));
+  }
 
 
 

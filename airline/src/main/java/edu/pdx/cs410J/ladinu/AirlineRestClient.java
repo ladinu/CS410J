@@ -3,6 +3,8 @@ package edu.pdx.cs410J.ladinu;
 import edu.pdx.cs410J.web.HttpRequestHelper;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * A helper class for accessing the rest client.  Note that this class provides
@@ -16,15 +18,20 @@ public class AirlineRestClient extends HttpRequestHelper
 
     private final String url;
 
+    public String getUrl() {
+      return url;
+    }
 
     /**
      * Creates a client to the airline REST service running on the given host and port
-     * @param hostName The name of the host
-     * @param port The port
+     * @param map The map gotten from ArgParse
      */
-    public AirlineRestClient( String hostName, int port )
+    public AirlineRestClient( Map<String, String> map)
     {
-        this.url = String.format( "http://%s:%d/%s/%s", hostName, port, WEB_APP, SERVLET );
+        String hostName = map.get(ArgParser.HOST_OPTION_KEY);
+        String port = map.get(ArgParser.PORT_OPTION_KEY);
+        this.url = MessageFormat.format(
+            "http://{0}:{1}/{2}/{3}?name={4}", hostName, port, WEB_APP, SERVLET, map.get("name"));
     }
 
     /**
@@ -43,8 +50,23 @@ public class AirlineRestClient extends HttpRequestHelper
         return get(this.url, "key", key);
     }
 
-    public Response addKeyValuePair( String key, String value ) throws IOException
+  /**
+   * Posts the flight data to the server. At this point, the map is expected
+   * to have all valid data (regardless if server validate or not).
+   * @param map Contains all flight info from commandline
+   * @return
+   * @throws IOException
+   */
+    public Response postFlight(Map<String, String> map) throws IOException
     {
-        return post( this.url, "key", key, "value", value );
-    }
+      return post( this.url, FlightValidator.SRC_KEY, map.get(FlightValidator.SRC_KEY),
+                     FlightValidator.NUMBER_KEY, map.get(FlightValidator.NUMBER_KEY),
+                     FlightValidator.DEPART_DATE_KEY, map.get(FlightValidator.DEPART_DATE_KEY),
+                     FlightValidator.DEPART_TIME_KEY, map.get(FlightValidator.DEPART_TIME_KEY),
+                     FlightValidator.DEPART_TIME_AM_PM_KEY, map.get(FlightValidator.DEPART_TIME_AM_PM_KEY),
+                     FlightValidator.DEST_KEY, map.get(FlightValidator.DEST_KEY),
+                     FlightValidator.ARRIVE_DATE_KEY, map.get(FlightValidator.ARRIVE_DATE_KEY),
+                     FlightValidator.ARRIVE_TIME_KEY, map.get(FlightValidator.ARRIVE_TIME_KEY),
+                     FlightValidator.ARRIVE_TIME_AM_PM_KEY, map.get(FlightValidator.ARRIVE_TIME_AM_PM_KEY));
+      }
 }
