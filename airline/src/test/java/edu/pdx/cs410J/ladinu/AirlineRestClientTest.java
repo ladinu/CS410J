@@ -17,7 +17,6 @@ public class AirlineRestClientTest {
     map.put(ArgParser.HOST_OPTION_KEY, "i");
     map.put(ArgParser.PORT_OPTION_KEY, "8080");
     map.put(ArgParser.NAME_ARG_KEY, "Alaska");
-    AirlineRestClient client = new AirlineRestClient(map);
-    assertThat(client.getUrl(), equalTo("http://i:8080/airline/flights?name=Alaska"));
+    assertThat(AirlineRestClient.getPostUrl(map), equalTo("http://i:8080/airline/flights?name=Alaska"));
   }
 }

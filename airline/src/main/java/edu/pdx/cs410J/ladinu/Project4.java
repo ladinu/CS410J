@@ -24,34 +24,6 @@ public class Project4 {
     handlePrintOption(map);
     handleSearchOption(map);
     handleArguments(map);
-
-//    AirlineRestClient client = new AirlineRestClient(hostName, port);
-//
-//    HttpRequestHelper.Response response;
-//    try {
-//        if (key == null) {
-//            // Print all key/value pairs
-//            response = client.getAllKeysAndValues();
-//
-//        } else if (value == null) {
-//            // Print all values of key
-//            response = client.getValues(key);
-//
-//        } else {
-//            // Post the key/value pair
-//            response = client.addKeyValuePair(key, value);
-//        }
-//
-//        checkResponseCode( HttpURLConnection.HTTP_OK, response);
-//
-//    } catch ( IOException ex ) {
-//        error("While contacting server: " + ex);
-//        return;
-//    }
-//
-//    System.out.println(response.getContent());
-//
-//    System.exit(0);
   }
 
   public static void handleArguments(Map<String, String> map) {
@@ -62,6 +34,19 @@ public class Project4 {
 
   public static void handleSearchOption(Map<String, String> map) {
     if (hasKey(map, ArgParser.SEARCH_OPTION_KEY)) {
+      validateSearchArguments(map);
+      AirlineRestClient client = new AirlineRestClient();
+      HttpRequestHelper.Response response;
+      try {
+        response = client.getFlights(map);
+        if (response.getCode() != HttpURLConnection.HTTP_NOT_FOUND) {
+          checkResponseCode( HttpURLConnection.HTTP_OK, response);
+        }
+        System.out.println(response.getContent());
+        exitWithZero();
+      } catch ( IOException e ) {
+        error("While contacting server: " + e);
+      }
     }
   }
 
@@ -75,7 +60,7 @@ public class Project4 {
 
   public static HttpRequestHelper.Response postFlight(Map<String, String> map) {
     validateArguments(map);
-    AirlineRestClient client = new AirlineRestClient(map);
+    AirlineRestClient client = new AirlineRestClient();
     HttpRequestHelper.Response response;
     try {
       response = client.postFlight(map);
@@ -90,6 +75,15 @@ public class Project4 {
   public static void validateArguments(Map<String, String> map) {
     try {
       FlightValidator.getFlight(map);
+    } catch (FlightValidatorException e) {
+      error(e.getMessage());
+    }
+  }
+
+  public static void validateSearchArguments(Map<String, String> map) {
+    try {
+      FlightValidator.getSrcAirport(map);
+      FlightValidator.getDestAirport(map);
     } catch (FlightValidatorException e) {
       error(e.getMessage());
     }
