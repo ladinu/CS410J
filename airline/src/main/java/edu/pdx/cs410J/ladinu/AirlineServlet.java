@@ -12,6 +12,14 @@ public class AirlineServlet extends HttpServlet {
   private final Map<String, Airline> airlineMap = new HashMap<>();
   private final Map<String, String> data = new HashMap<String, String>();
 
+  /**
+   * Handles the GET request to url. This method write flight data into the response
+   * if any flights are found
+   * @param request
+   * @param response
+   * @throws ServletException
+   * @throws IOException
+   */
   @Override
   protected void doGet( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
   {
@@ -48,6 +56,14 @@ public class AirlineServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Handles the creation of new flights. For a given airline, the method validate and adds a flight
+   * to the Airline Map from the POST data
+   * @param request
+   * @param response
+   * @throws ServletException
+   * @throws IOException
+   */
   @Override
   protected void doPost( HttpServletRequest request, HttpServletResponse response ) throws ServletException, IOException
   {
@@ -104,6 +120,12 @@ public class AirlineServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Indicates missing params by writing an error to the response
+   * @param response
+   * @param key
+   * @throws IOException
+   */
   private void missingRequiredParameter( HttpServletResponse response, String key )
       throws IOException
   {
@@ -114,6 +136,12 @@ public class AirlineServlet extends HttpServlet {
     response.setStatus( HttpServletResponse.SC_PRECONDITION_FAILED );
   }
 
+  /**
+   * Writes all flights of given airline to the response
+   * @param airlineName
+   * @param response
+   * @throws IOException
+   */
   private void writeAirline( String airlineName, HttpServletResponse response ) throws IOException
   {
     Airline airline = this.airlineMap.get(airlineName);
@@ -126,6 +154,14 @@ public class AirlineServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Writes all flights of a given airline that match SRC and DEST
+   * @param response
+   * @param airlineName
+   * @param srcAirport
+   * @param destAirport
+   * @throws IOException
+   */
   private void writeAirline(HttpServletResponse response, String airlineName, String srcAirport, String destAirport) throws IOException {
     Airline airline = this.airlineMap.get(airlineName);
     if (airline != null) {
@@ -154,6 +190,12 @@ public class AirlineServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Utility method for extracting POST and URL params form a request
+   * @param name
+   * @param request
+   * @return
+   */
   private String getParameter(String name, HttpServletRequest request) {
     String value = request.getParameter(name);
     if (value == null || "".equals(value)) {

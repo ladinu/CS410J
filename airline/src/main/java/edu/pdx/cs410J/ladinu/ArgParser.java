@@ -1,7 +1,5 @@
 package edu.pdx.cs410J.ladinu;
 
-import edu.pdx.cs410J.AirportNames;
-
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,12 +19,11 @@ public class ArgParser {
       "    -README               Prints a README for this project and exits\n" +
       "  Date and time should be in the format: mm/dd/yyyy hh:mm\n" +
       "\n" +
-      "This program extends the functionality of project 2. In this version,\n" +
+      "This program extends the functionality of project 3. In this version,\n" +
       "you need to enter time using 12hour format followed by am/pm. For example: \n" +
-      " $ java -jar program -print Alaska 31 PDX 2/1/2014 9:00 am LAX 2/1/2014 11:30 am\n" +
-      "Also note that you cannot use -print option with -pretty - options togather. Since \n" +
-      "they both print to STDOUT the program will complain. ALso, the program does not complain\n" +
-      "if you use -textFile and -pretty option for the same file.";
+      " $ java -jar program -host localhost -port 8080 -print \\\n " +
+      "Alaska 31 PDX 2/1/2014 9:00 am LAX 2/1/2014 11:30 am\n" +
+      "Also note that you cannot use -print option with -search options together\n";
 
   public static final String SEARCH_OPTION = "-search";
   public static final String SEARCH_OPTION_KEY = "search";

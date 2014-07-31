@@ -15,36 +15,46 @@ import java.util.Map;
  */
 public class AirlineRestClient extends HttpRequestHelper
 {
-    private static final String WEB_APP = "airline";
-    private static final String SERVLET = "flights";
-
-    public static String getPostUrl(Map<String, String> map) {
-      String hostName = map.get(ArgParser.HOST_OPTION_KEY);
-      String port = map.get(ArgParser.PORT_OPTION_KEY);
-      String name = map.get(ArgParser.NAME_ARG_KEY);
-      try {
-        name = URLEncoder.encode(name, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-        Project4.error(e.getMessage());
-      }
-      String url = MessageFormat.format(
-          "http://{0}:{1}/{2}/{3}?name={4}", hostName, port, WEB_APP, SERVLET, name);
-      return url;
-    }
-
-    public static String getUrl(Map<String, String> map) {
-      String hostName = map.get(ArgParser.HOST_OPTION_KEY);
-      String port = map.get(ArgParser.PORT_OPTION_KEY);
-      String url = MessageFormat.format(
-          "http://{0}:{1}/{2}/{3}", hostName, port, WEB_APP, SERVLET);
-      return url;
-    }
+  private static final String WEB_APP = "airline";
+  private static final String SERVLET = "flights";
 
   /**
-   * Posts the flight data to the server. At this point, the map is expected
-   * to have all valid data (regardless if server validate or not).
+   * Generate the URL which is used to POST flight data
+   * @param map
+   * @return The flight POST URL
+   */
+  public static String getPostUrl(Map<String, String> map) {
+    String hostName = map.get(ArgParser.HOST_OPTION_KEY);
+    String port = map.get(ArgParser.PORT_OPTION_KEY);
+    String name = map.get(ArgParser.NAME_ARG_KEY);
+    try {
+      name = URLEncoder.encode(name, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      Project4.error(e.getMessage());
+    }
+    String url = MessageFormat.format(
+        "http://{0}:{1}/{2}/{3}?name={4}", hostName, port, WEB_APP, SERVLET, name);
+    return url;
+  }
+
+
+  /**
+   * Generate the url of the server using the HOST and PORT option
+   * @param map
+   * @return The url of the server
+   */
+  public static String getUrl(Map<String, String> map) {
+    String hostName = map.get(ArgParser.HOST_OPTION_KEY);
+    String port = map.get(ArgParser.PORT_OPTION_KEY);
+    String url = MessageFormat.format(
+        "http://{0}:{1}/{2}/{3}", hostName, port, WEB_APP, SERVLET);
+    return url;
+  }
+
+  /**
+   * Get flight data filtered by NAME, SRC, and DEST from the server
    * @param map Contains all flight info from commandline
-   * @return
+   * @return HTTP response
    * @throws IOException
    */
   public Response getFlights(Map<String, String> map) throws IOException
@@ -59,7 +69,7 @@ public class AirlineRestClient extends HttpRequestHelper
    * Posts the flight data to the server. At this point, the map is expected
    * to have all valid data (regardless if server validate or not).
    * @param map Contains all flight info from commandline
-   * @return
+   * @return HTTP Response
    * @throws IOException
    */
     public Response postFlight(Map<String, String> map) throws IOException

@@ -64,6 +64,10 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
     return dateInstance.format(ariveTime);
   }
 
+  /**
+   * Return a JSON version of all the flight data
+   * @return
+   */
   public  String toJSON() {
     long duration = ariveTime.getTime() - departTime.getTime();
     duration = TimeUnit.MILLISECONDS.toMinutes(duration);

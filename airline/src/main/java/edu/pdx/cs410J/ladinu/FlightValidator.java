@@ -20,11 +20,23 @@ public class FlightValidator {
   public static final String ARRIVE_TIME_KEY = "arriveTime";
   public static final String ARRIVE_TIME_AM_PM_KEY = "arriveTimeAmPm";
 
+  /**
+   * Tries to return a Flight object by using the K/V pairs in the map
+   * @param map
+   * @return Flight
+   * @throws FlightValidatorException
+   */
   public static Flight getFlight(Map<String, String> map) throws FlightValidatorException {
     return new Flight(getFlightNumber(map), getSrcAirport(map), getDepartDateTime(map),
         getDestAirport(map), getArriveDateTime(map));
   }
 
+  /**
+   * Validates and return a flight number
+   * @param map
+   * @return Integer
+   * @throws FlightValidatorException
+   */
   public static int getFlightNumber(Map<String, String> map) throws FlightValidatorException {
     String number = map.get(NUMBER_KEY);
     if (number != null) {
@@ -38,6 +50,12 @@ public class FlightValidator {
     }
   }
 
+  /**
+   * Validate and returns a IATA code
+   * @param map
+   * @return String
+   * @throws FlightValidatorException
+   */
   public static String getSrcAirport(Map<String, String> map) throws FlightValidatorException {
     String src = map.get(SRC_KEY);
     if (src != null) {
@@ -52,6 +70,12 @@ public class FlightValidator {
     }
   }
 
+  /**
+   * Validate and returns a IATA code.
+   * @param map
+   * @return String
+   * @throws FlightValidatorException
+   */
   public static String getDestAirport(Map<String, String> map) throws FlightValidatorException {
     String src = map.get(DEST_KEY);
     if (src != null) {
@@ -66,6 +90,12 @@ public class FlightValidator {
     }
   }
 
+  /**
+   * Validate and returns a Date object corresponding to Depart date time
+   * @param map
+   * @return Date
+   * @throws FlightValidatorException
+   */
   public static Date getDepartDateTime(Map<String, String> map) throws FlightValidatorException {
     String departDate = map.get(DEPART_DATE_KEY);
     String departTime  = map.get(DEPART_TIME_KEY);
@@ -95,6 +125,12 @@ public class FlightValidator {
     }
   }
 
+  /**
+   * Validate arrive date time
+   * @param map
+   * @return Date
+   * @throws FlightValidatorException
+   */
   public static Date getArriveDateTime(Map<String, String> map) throws FlightValidatorException {
 
     String arriveDate = map.get(ARRIVE_DATE_KEY);
