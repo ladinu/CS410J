@@ -1,49 +1,27 @@
 package edu.pdx.cs410J.ladinu.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.RootPanel;
-import edu.pdx.cs410J.AbstractFlight;
-import edu.pdx.cs410J.AbstractAirline;
-
-import java.util.Collection;
+import com.google.gwt.user.client.ui.*;
 
 /**
  * A basic GWT class that makes sure that we can send an airline back from the server
  */
 public class AirlineGwt implements EntryPoint {
   public void onModuleLoad() {
-    Button button = new Button("Ping Server");
-    button.addClickHandler(new ClickHandler() {
-        public void onClick( ClickEvent clickEvent )
-        {
-            PingServiceAsync async = GWT.create( PingService.class );
-            async.ping( new AsyncCallback<AbstractAirline>() {
+    HorizontalPanel container = new HorizontalPanel();
 
-                public void onFailure( Throwable ex )
-                {
-                    Window.alert(ex.toString());
-                }
+    Label airlineNameLabel = new Label("Airline Name: ");
+    TextBox airlineNameTextBox = new TextBox();
+    setPlaceHolder(airlineNameTextBox, "Alaska");
 
-                public void onSuccess( AbstractAirline airline )
-                {
-                    StringBuilder sb = new StringBuilder( airline.toString() );
-                    Collection<AbstractFlight> flights = airline.getFlights();
-                    for ( AbstractFlight flight : flights ) {
-                        sb.append(flight);
-                        sb.append("\n");
-                    }
-                    Window.alert( sb.toString() );
-                }
-            });
-        }
-    });
-      RootPanel rootPanel = RootPanel.get();
-      rootPanel.add(button);
+    container.add(airlineNameLabel);
+    container.add(airlineNameTextBox);
+
+    RootPanel rootPanel = RootPanel.get();
+    //rootPanel.add(container);
+  }
+
+  private static void setPlaceHolder(Widget widget, String placeHolderText) {
+    widget.getElement().setAttribute("placeholder", placeHolderText);
   }
 }

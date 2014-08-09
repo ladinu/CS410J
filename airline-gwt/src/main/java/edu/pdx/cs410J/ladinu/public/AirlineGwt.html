@@ -2,12 +2,117 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <title>An Airline in GWT</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style type="text/css">
+      .form-inline .form-group {
+          margin-left: 0;
+          margin-right: 0;
+      }
+    </style>
+    <title>An Airline in GWT</title>
 </head>
 <body>
-  <script language="javascript" src="airline.nocache.js" type="text/javascript"></script>
-
-  <p>This is the beginning of your GWT User Interface</p>
-
+    <div class="row">
+        <div class="col-md-4">
+            <div id="create-flight">
+                <div class="page-header">
+                    <h1><small>Add Flights To Airlines</small></h1>
+                </div>
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Airline Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="Alaska">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Flight Number</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" placeholder="42">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Source Airport</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="PDX">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Departure Time</label>
+                        <div class="col-sm-8">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="3/12/2014"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="hh:mm"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" value="option1" checked>
+                                            AM
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" value="option1">
+                                            PM
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Destination Airport</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" placeholder="LAX">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Arrival Time</label>
+                        <div class="col-sm-8">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="3/12/2014"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="hh:mm"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios1" value="option1">
+                                            AM
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios1" value="option1" checked>
+                                            PM
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+        </div>
+    </div>
+     <script language="javascript" src="airline.nocache.js" type="text/javascript"></script>
 </body>
 </html>
