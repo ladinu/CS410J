@@ -2,8 +2,8 @@ package edu.pdx.cs410J.ladinu.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.pdx.cs410J.AbstractAirline;
-import edu.pdx.cs410J.ladinu.client.Airline;
-import edu.pdx.cs410J.ladinu.client.Flight;
+import edu.pdx.cs410J.ladinu.common.Airline;
+import edu.pdx.cs410J.ladinu.common.Flight;
 import edu.pdx.cs410J.ladinu.client.PingService;
 
 /**

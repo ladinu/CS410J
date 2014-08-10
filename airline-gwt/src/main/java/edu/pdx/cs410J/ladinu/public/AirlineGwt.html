@@ -37,38 +37,38 @@
             <div id="create-flight">
                 <form onsubmit="return false;" class="form-horizontal" role="form">
                     <legend>Add Flights To Airlines</legend>
-                    <div class="form-group">
+                    <div id="airline-name-field" class="form-group">
                         <label class="col-sm-4 control-label">Airline Name</label>
                         <div class="col-sm-8">
                             <input id="airline-name-text-box" type="text" class="form-control" placeholder="Alaska">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div id="flight-number-field" class="form-group">
                         <label class="col-sm-4 control-label">Flight Number</label>
                         <div class="col-sm-8">
-                            <input type="number" class="form-control" placeholder="42">
+                            <input id="flight-number-text-box" type="text" class="form-control" placeholder="42">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div id="source-airport-field" class="form-group">
                         <label class="col-sm-4 control-label">Source Airport</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" placeholder="PDX">
+                            <input id="source-airport-text-box" type="text" class="form-control" placeholder="PDX">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div id="src-date-time-field" class="form-group">
                         <label class="col-sm-4 control-label">Departure Time</label>
                         <div class="col-sm-8">
                             <div class="form-inline">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="3/12/2014"/>
+                                    <input id="departure-date-text-box" type="text" class="form-control" placeholder="3/12/2014"/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="hh:mm"/>
+                                    <input id="departure-time-text-box" type="text" class="form-control" placeholder="hh:mm"/>
                                 </div>
                                 <div class="form-group">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" checked>
+                                            <input id="src-am" name="options1" type="radio" checked>
                                             AM
                                         </label>
                                     </div>
@@ -76,7 +76,7 @@
                                 <div class="form-group">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio">
+                                            <input name="options1" type="radio">
                                             PM
                                         </label>
                                     </div>
@@ -84,26 +84,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div id="destination-airport-field" class="form-group">
                         <label class="col-sm-4 control-label">Destination Airport</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" placeholder="LAX">
+                            <input id="destination-airport-text-box" type="text" class="form-control" placeholder="LAX">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div id="dest-date-time-field" class="form-group">
                         <label class="col-sm-4 control-label">Arrival Time</label>
                         <div class="col-sm-8">
                             <div class="form-inline">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="3/12/2014"/>
+                                    <input id="arrival-date-text-box" type="text" class="form-control" placeholder="3/12/2014"/>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="hh:mm"/>
+                                    <input id="arrival-time-text-box" type="text" class="form-control" placeholder="hh:mm"/>
                                 </div>
                                 <div class="form-group">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio">
+                                            <input id="dest-am" name="options2" type="radio">
                                             AM
                                         </label>
                                     </div>
@@ -111,7 +111,7 @@
                                 <div class="form-group">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" checked>
+                                            <input name="options2" type="radio" checked>
                                             PM
                                         </label>
                                     </div>
@@ -162,9 +162,10 @@
                             <tr>
                                 <td>Flight Number</td>
                                 <td>Source</td>
-                                <td>Departure Time</td>
+                                <td>Departure Date</td>
                                 <td>Destination</td>
-                                <td>Arrival Time</td>
+                                <td>Arrival Date</td>
+                                <td>Duration</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,6 +175,7 @@
                             <td>4/14/2014 4:53 AM</td>
                             <td>Los Angeles, California</td>
                             <td>4/14/2014 8:00 AM</td>
+                            <td>1444m</td>
                         </tr>
                         <tr>
                             <td>44</td>
@@ -181,6 +183,7 @@
                             <td>4/14/2014 4:53 AM</td>
                             <td>Los Angeles, California</td>
                             <td>4/14/2014 8:00 AM</td>
+                            <td>1444m</td>
                         </tr>
                         </tbody>
                     </table>

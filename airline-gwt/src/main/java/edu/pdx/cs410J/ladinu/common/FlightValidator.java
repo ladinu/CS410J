@@ -1,10 +1,9 @@
-package edu.pdx.cs410J.ladinu;
+package edu.pdx.cs410J.ladinu.common;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import edu.pdx.cs410J.AirportNames;
 
-import java.text.MessageFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -112,12 +111,11 @@ public class FlightValidator {
 
     if (isValidDate(departDate)) {
       try {
-        String dateStr = MessageFormat.format("{0} {1} {2}", departDate, departTime, departTimeAmPm);
+        String dateStr = departDate + " " + departTime + " " + departTimeAmPm;
         String dateFormat = "MM/dd/yyyy h:mm a";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        simpleDateFormat.setLenient(false);
-        return  simpleDateFormat.parse(dateStr);
-      } catch (ParseException e){
+        DateTimeFormat fmt = DateTimeFormat.getFormat(dateFormat);
+        return fmt.parse(dateStr);
+      } catch (IllegalArgumentException e){
         throw new FlightValidatorException("could not parse depart date time");
       }
     } else {
@@ -148,12 +146,11 @@ public class FlightValidator {
 
     if (isValidDate(arriveDate)) {
       try {
-        String dateStr = MessageFormat.format("{0} {1} {2}", arriveDate, arriveTime, arriveTimeAmPm);
+        String dateStr = arriveDate + " " + arriveTime + " " + arriveTimeAmPm;
         String dateFormat = "MM/dd/yyyy h:mm a";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        simpleDateFormat.setLenient(false);
-        return  simpleDateFormat.parse(dateStr);
-      } catch (ParseException e){
+        DateTimeFormat fmt = DateTimeFormat.getFormat(dateFormat);
+        return fmt.parse(dateStr);
+      } catch (IllegalArgumentException e){
         throw new FlightValidatorException("could not parse arrive date time");
       }
     } else {

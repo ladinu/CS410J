@@ -1,4 +1,4 @@
-package edu.pdx.cs410J.ladinu;
+package edu.pdx.cs410J.ladinu.common;
 
 import edu.pdx.cs410J.AbstractAirline;
 import edu.pdx.cs410J.AbstractFlight;
