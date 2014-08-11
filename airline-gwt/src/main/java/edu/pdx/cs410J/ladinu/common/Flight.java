@@ -1,11 +1,10 @@
 package edu.pdx.cs410J.ladinu.common;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import edu.pdx.cs410J.AbstractFlight;
 import edu.pdx.cs410J.AirportNames;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Flight extends AbstractFlight implements Comparable <Flight> {
 
@@ -44,8 +43,8 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
 
   @Override
   public String getDepartureString() {
-    DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
-    return dateInstance.format(departTime);
+    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+    return format.format(departTime);
   }
 
   @Override
@@ -60,8 +59,8 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
 
   @Override
   public String getArrivalString() {
-    DateFormat dateInstance = DateFormat.getDateInstance(DateFormat.SHORT);
-    return dateInstance.format(ariveTime);
+    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+    return format.format(departTime);
   }
 
   /**
@@ -70,7 +69,7 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
    */
   public  String toJSON() {
     long duration = ariveTime.getTime() - departTime.getTime();
-    duration = TimeUnit.MILLISECONDS.toMinutes(duration);
+    duration = duration / (60 * 1000) % 60;
 
     StringBuilder sb = new StringBuilder();
     sb.append("\n\t\t\t{ number: \"" + this.number + "\",\n");

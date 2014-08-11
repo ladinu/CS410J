@@ -1,7 +1,6 @@
 package edu.pdx.cs410J.ladinu.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,7 +10,6 @@ import edu.pdx.cs410J.ladinu.common.Flight;
 import edu.pdx.cs410J.ladinu.common.FlightValidator;
 import edu.pdx.cs410J.ladinu.common.FlightValidatorException;
 
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,65 +47,13 @@ public class AirlineGwt implements EntryPoint {
       public void onClick(ClickEvent clickEvent) {
         Map<String, String> flightInfoMap = getFlightInfoMap();
         ArrayList<String> errorList = new ArrayList<>();
-        String airlineNameFieldId = "airline-name-field";
 
-        // Validate AIrline Name
-        if (airlineNameTextBox.getText().isEmpty()) {
-          errorList.add("Airline name should not be blank");
-          addErrorStyle(airlineNameFieldId);
-        } else {
-          removeErrorStyle(airlineNameFieldId);
-        }
-
-        // Validate Flight Number
-        String flightNumberFieldId = "flight-number-field";
-        try {
-          FlightValidator.getFlightNumber(flightInfoMap);
-          removeErrorStyle(flightNumberFieldId);
-        } catch (FlightValidatorException e) {
-          errorList.add(e.getMessage());
-          addErrorStyle(flightNumberFieldId);
-        }
-
-        // Validate Source Airport
-        String sourceAirportFieldId = "source-airport-field";
-        try {
-          FlightValidator.getSrcAirport(flightInfoMap);
-          removeErrorStyle(sourceAirportFieldId);
-        } catch (FlightValidatorException e) {
-          addErrorStyle(sourceAirportFieldId);
-          errorList.add(e.getMessage());
-        }
-
-        // Validate Destination Airport
-        String destinationAirportFieldId = "destination-airport-field";
-        try {
-          FlightValidator.getDestAirport(flightInfoMap);
-          removeErrorStyle(destinationAirportFieldId);
-        } catch (FlightValidatorException e) {
-          addErrorStyle(destinationAirportFieldId);
-          errorList.add(e.getMessage());
-        }
-
-        // Validate Departure Time
-        String sourceDateTimeFieldId = "src-date-time-field";
-        try {
-          FlightValidator.getDepartDateTime(flightInfoMap);
-          removeErrorStyle(sourceDateTimeFieldId);
-        } catch (FlightValidatorException e) {
-          addErrorStyle(sourceDateTimeFieldId);
-          errorList.add(e.getMessage());
-        }
-
-        // Validate Arrival Time
-        String arrivalDateTimeFieldId = "dest-date-time-field";
-        try {
-          FlightValidator.getArriveDateTime(flightInfoMap);
-          removeErrorStyle(arrivalDateTimeFieldId);
-        } catch (FlightValidatorException e) {
-          addErrorStyle(arrivalDateTimeFieldId);
-          errorList.add(e.getMessage());
-        }
+        validateAirlineName(errorList, "airline-name-field");
+        validateFlightNumber(flightInfoMap, errorList);
+        validateSourceAirport(flightInfoMap, errorList);
+        validateDestinationAirport(flightInfoMap, errorList);
+        validateDepartureDateTime(flightInfoMap, errorList);
+        validateArrivalDateTime(flightInfoMap, errorList);
 
         if (errorList.isEmpty()) {
           try {
@@ -125,6 +71,76 @@ public class AirlineGwt implements EntryPoint {
         }
       }
     });
+  }
+
+  public void validateArrivalDateTime(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
+    // Validate Arrival Time
+    String arrivalDateTimeFieldId = "dest-date-time-field";
+    try {
+      FlightValidator.getArriveDateTime(flightInfoMap);
+      removeErrorStyle(arrivalDateTimeFieldId);
+    } catch (FlightValidatorException e) {
+      addErrorStyle(arrivalDateTimeFieldId);
+      errorList.add(e.getMessage());
+    }
+  }
+
+  public void validateDepartureDateTime(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
+    // Validate Departure Time
+    String sourceDateTimeFieldId = "src-date-time-field";
+    try {
+      FlightValidator.getDepartDateTime(flightInfoMap);
+      removeErrorStyle(sourceDateTimeFieldId);
+    } catch (FlightValidatorException e) {
+      addErrorStyle(sourceDateTimeFieldId);
+      errorList.add(e.getMessage());
+    }
+  }
+
+  public void validateDestinationAirport(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
+    // Validate Destination Airport
+    String destinationAirportFieldId = "destination-airport-field";
+    try {
+      FlightValidator.getDestAirport(flightInfoMap);
+      removeErrorStyle(destinationAirportFieldId);
+    } catch (FlightValidatorException e) {
+      addErrorStyle(destinationAirportFieldId);
+      errorList.add(e.getMessage());
+    }
+  }
+
+  public void validateSourceAirport(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
+    // Validate Source Airport
+    String sourceAirportFieldId = "source-airport-field";
+    try {
+      FlightValidator.getSrcAirport(flightInfoMap);
+      removeErrorStyle(sourceAirportFieldId);
+    } catch (FlightValidatorException e) {
+      addErrorStyle(sourceAirportFieldId);
+      errorList.add(e.getMessage());
+    }
+  }
+
+  public void validateFlightNumber(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
+    // Validate Flight Number
+    String flightNumberFieldId = "flight-number-field";
+    try {
+      FlightValidator.getFlightNumber(flightInfoMap);
+      removeErrorStyle(flightNumberFieldId);
+    } catch (FlightValidatorException e) {
+      errorList.add(e.getMessage());
+      addErrorStyle(flightNumberFieldId);
+    }
+  }
+
+  public void validateAirlineName(ArrayList<String> errorList, String airlineNameFieldId) {
+    // Validate AIrline Name
+    if (airlineNameTextBox.getText().isEmpty()) {
+      errorList.add("Airline name should not be blank");
+      addErrorStyle(airlineNameFieldId);
+    } else {
+      removeErrorStyle(airlineNameFieldId);
+    }
   }
 
   public  Map<String, String> getFlightInfoMap() {
