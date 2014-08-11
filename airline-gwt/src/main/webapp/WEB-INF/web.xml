@@ -7,12 +7,12 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>pingServlet</servlet-name>
-    <servlet-class>edu.pdx.cs410J.ladinu.server.PingServiceImpl</servlet-class>
+    <servlet-class>edu.pdx.cs410J.ladinu.server.FlightServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>pingServlet</servlet-name>
-    <url-pattern>/airline/ping</url-pattern>
+    <url-pattern>/airline/save</url-pattern>
   </servlet-mapping>
 
   <!-- Default page to serve -->

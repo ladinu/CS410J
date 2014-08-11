@@ -1,6 +1,6 @@
-package edu.pdx.cs410J.ladinu.common;
+package edu.pdx.cs410J.ladinu.client;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.pdx.cs410J.AbstractFlight;
 import edu.pdx.cs410J.AirportNames;
 
@@ -69,7 +69,7 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
    */
   public  String toJSON() {
     long duration = ariveTime.getTime() - departTime.getTime();
-    duration = duration / (60 * 1000) % 60;
+    duration = (duration / 1000) / 60;
 
     StringBuilder sb = new StringBuilder();
     sb.append("\n\t\t\t{ number: \"" + this.number + "\",\n");

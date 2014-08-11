@@ -1,9 +1,8 @@
-package edu.pdx.cs410J.ladinu.common;
+package edu.pdx.cs410J.ladinu.client;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.pdx.cs410J.AirportNames;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 

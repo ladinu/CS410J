@@ -1,15 +1,17 @@
 package edu.pdx.cs410J.ladinu.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.pdx.cs410J.AbstractAirline;
+
+import java.util.Map;
 
 /**
  * The client-side interface to the ping service
  */
-public interface PingServiceAsync {
+public interface FlightServiceAsync {
 
   /**
    * Return the current date/time on the server
    */
-  void ping(AsyncCallback<AbstractAirline> async);
+  void save(Flight flight, String airlineName, AsyncCallback<Void> async);
+  void getMap(AsyncCallback<Map<String, Airline>> async);
 }

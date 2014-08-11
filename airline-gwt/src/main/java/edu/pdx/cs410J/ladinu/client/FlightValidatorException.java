@@ -1,4 +1,4 @@
-package edu.pdx.cs410J.ladinu.common;
+package edu.pdx.cs410J.ladinu.client;
 
 /**
  * This exception is thrown when a Flight cannot be created by given data

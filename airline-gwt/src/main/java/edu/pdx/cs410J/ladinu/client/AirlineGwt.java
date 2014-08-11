@@ -1,14 +1,13 @@
 package edu.pdx.cs410J.ladinu.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import edu.pdx.cs410J.ladinu.common.Flight;
-import edu.pdx.cs410J.ladinu.common.FlightValidator;
-import edu.pdx.cs410J.ladinu.common.FlightValidatorException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +27,14 @@ public class AirlineGwt implements EntryPoint {
   private TextBox destinationAirportTextBox;
   private TextBox arrivalDateTextBox;
   private TextBox arrivalTimeTextBox;
+  private TextBox airlineSearchNameTextBox;
+  private TextBox airlineSearchSourceTextBox;
+  private TextBox airlineSearchDestinationTextBox;
+  private FlightServiceAsync async;
 
   public void onModuleLoad() {
+    async = GWT.create(FlightService.class);
+
     flightNumberTextBox = getNumberBox("flight-number-text-box");
     airlineNameTextBox = getTextBox("airline-name-text-box");
     sourcAirportTextBox = getTextBox("source-airport-text-box");
@@ -39,14 +44,22 @@ public class AirlineGwt implements EntryPoint {
     arrivalDateTextBox = getTextBox("arrival-date-text-box");
     arrivalTimeTextBox = getTextBox("arrival-time-text-box");
 
+    airlineSearchNameTextBox = getTextBox("airline-name-search");
+    airlineSearchSourceTextBox = getTextBox("airport-source-search");
+    airlineSearchDestinationTextBox = getTextBox("airport-destination-search");
+
+    Button searchFlightButton = getButton("search-flight-button");
     Button addFlightButton = getButton("flight-add-button");
 
+    // TODO: remove
+    remvove();
 
     addFlightButton.addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent clickEvent) {
         Map<String, String> flightInfoMap = getFlightInfoMap();
         ArrayList<String> errorList = new ArrayList<>();
+        String airlineName = airlineNameTextBox.getText();
 
         validateAirlineName(errorList, "airline-name-field");
         validateFlightNumber(flightInfoMap, errorList);
@@ -58,7 +71,17 @@ public class AirlineGwt implements EntryPoint {
         if (errorList.isEmpty()) {
           try {
             Flight flight = FlightValidator.getFlight(flightInfoMap);
-            Window.alert(flight.toJSON());
+            async.save(flight, airlineName, new AsyncCallback<Void>() {
+              @Override
+              public void onFailure(Throwable throwable) {
+                Window.alert(throwable.getMessage());
+              }
+
+              @Override
+              public void onSuccess(Void result) {
+                Window.alert("Saved!");
+              }
+            });
           } catch (FlightValidatorException e) {
             Window.alert("Something went wrong: " + e.getMessage());
           }
@@ -71,6 +94,51 @@ public class AirlineGwt implements EntryPoint {
         }
       }
     });
+
+    searchFlightButton.addClickHandler(new ClickHandler() {
+      @Override
+      public void onClick(ClickEvent clickEvent) {
+        final String airlineName = airlineSearchNameTextBox.getText();
+        final String srcAirport = airlineSearchSourceTextBox.getText();
+        final String destAirport = airlineSearchDestinationTextBox.getText();
+
+        async.getMap(new AsyncCallback<Map<String, Airline>>() {
+          @Override
+          public void onFailure(Throwable throwable) {
+            Window.alert(throwable.getMessage());
+          }
+
+          @Override
+          public void onSuccess(Map<String, Airline> map) {
+            Airline airline = map.get(airlineName);
+            if (airline != null) {
+              ArrayList<Flight> flights = new ArrayList<>();
+              for (Object o : airline.getFlights()) {
+                Flight f = (Flight) o;
+                if (f.getDestination().equals(destAirport) && f.getSource().equals(srcAirport)) {
+                  flights.add(f);
+                  Window.alert(f.toJSON());
+                }
+              }
+              if (flights.isEmpty()) {
+                Window.alert("Flights not found");
+              }
+            }
+          }
+        });
+      }
+    });
+  }
+
+  private void remvove() {
+    flightNumberTextBox.setText("42");
+    airlineNameTextBox.setText("Foo Bar");
+    sourcAirportTextBox.setText("PDX");
+    destinationAirportTextBox.setText("LAX");
+    departureDateTextBox.setText("3/12/2014");
+    departureTimeTextBox.setText("4:00");
+    arrivalDateTextBox.setText("3/12/2014");
+    arrivalTimeTextBox.setText("4:00");
   }
 
   public void validateArrivalDateTime(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
