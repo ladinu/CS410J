@@ -43,7 +43,7 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
 
   @Override
   public String getDepartureString() {
-    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
     return format.format(departTime);
   }
 
@@ -59,7 +59,7 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
 
   @Override
   public String getArrivalString() {
-    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT);
+    DateTimeFormat format = DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM);
     return format.format(departTime);
   }
 
@@ -68,8 +68,7 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
    * @return
    */
   public  String toJSON() {
-    long duration = ariveTime.getTime() - departTime.getTime();
-    duration = (duration / 1000) / 60;
+    long duration = getDuration();
 
     StringBuilder sb = new StringBuilder();
     sb.append("\n\t\t\t{ number: \"" + this.number + "\",\n");
@@ -80,6 +79,12 @@ public class Flight extends AbstractFlight implements Comparable <Flight> {
     sb.append("\t\t\t  duration: \"" + duration + " minutes\"\n");
     sb.append("\t\t\t}");
     return sb.toString();
+  }
+
+  public long getDuration() {
+    long duration = ariveTime.getTime() - departTime.getTime();
+    duration = (duration / 1000) / 60;
+    return duration;
   }
 
   @Override

@@ -3,13 +3,18 @@ package edu.pdx.cs410J.ladinu.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import edu.pdx.cs410J.AirportNames;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,6 +115,10 @@ public class AirlineGwt implements EntryPoint {
 
           @Override
           public void onSuccess(Map<String, Airline> map) {
+            // Clear the result table
+            Element element = getElementById("result-table");
+            element.removeAllChildren();
+
             Airline airline = map.get(airlineName);
             if (airline != null) {
               ArrayList<Flight> flights = new ArrayList<>();
@@ -117,11 +126,12 @@ public class AirlineGwt implements EntryPoint {
                 Flight f = (Flight) o;
                 if (f.getDestination().equals(destAirport) && f.getSource().equals(srcAirport)) {
                   flights.add(f);
-                  Window.alert(f.toJSON());
                 }
               }
-              if (flights.isEmpty()) {
-                Window.alert("Flights not found");
+              if (!flights.isEmpty()) {
+                for (Flight f : flights) {
+                  element.appendChild(getTR(f));
+                }
               }
             }
           }
@@ -139,6 +149,23 @@ public class AirlineGwt implements EntryPoint {
     departureTimeTextBox.setText("4:00");
     arrivalDateTextBox.setText("3/12/2014");
     arrivalTimeTextBox.setText("4:00");
+  }
+
+  public Element getTR(Flight flight) {
+    Element tr = DOM.createTR();
+    tr.appendChild(getTD(String.valueOf(flight.getNumber())));
+    tr.appendChild(getTD(AirportNames.getName(flight.getSource())));
+    tr.appendChild(getTD(flight.getDepartureString()));
+    tr.appendChild(getTD(AirportNames.getName(flight.getDestination())));
+    tr.appendChild(getTD(flight.getArrivalString()));
+    tr.appendChild(getTD(String.valueOf(flight.getDuration())));
+    return tr;
+  }
+
+  public Element getTD(String str) {
+    Element td = DOM.createTD();
+    td.setInnerHTML(str);
+    return td;
   }
 
   public void validateArrivalDateTime(Map<String, String> flightInfoMap, ArrayList<String> errorList) {
@@ -234,15 +261,19 @@ public class AirlineGwt implements EntryPoint {
   }
 
   public static Button getButton(String id) {
-    return Button.wrap(Document.get().getElementById(id));
+    return Button.wrap(getElementById(id));
   }
 
   public static SimpleRadioButton getRadioButton(String id) {
-    return SimpleRadioButton.wrap(Document.get().getElementById(id));
+    return SimpleRadioButton.wrap(getElementById(id));
   }
 
   public static TextBox getTextBox(String id) {
-    return TextBox.wrap(Document.get().getElementById(id));
+    return TextBox.wrap(getElementById(id));
+  }
+
+  private static Element getElementById(String id) {
+    return Document.get().getElementById(id);
   }
 
   public static TextBox getNumberBox(String id) {
@@ -252,11 +283,11 @@ public class AirlineGwt implements EntryPoint {
   }
 
   public static void addErrorStyle(String id) {
-    Document.get().getElementById(id).addClassName("has-error");
+    getElementById(id).addClassName("has-error");
   }
 
   public static void removeErrorStyle(String id) {
-    Document.get().getElementById(id).removeClassName("has-error");
+    getElementById(id).removeClassName("has-error");
   }
 
 }
