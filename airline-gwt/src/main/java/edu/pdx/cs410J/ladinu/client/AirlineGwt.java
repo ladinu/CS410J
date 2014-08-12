@@ -118,9 +118,27 @@ public class AirlineGwt implements EntryPoint {
             // Clear the result table
             Element element = getElementById("result-table");
             element.removeAllChildren();
+            removeErrorStyle("airport-source-search-field");
+            removeErrorStyle("airport-destination-search-field");
 
             Airline airline = map.get(airlineName);
             if (airline != null) {
+              if (airlineSearchDestinationTextBox.getText().isEmpty() &&
+                  airlineSearchSourceTextBox.getText().isEmpty()) {
+                for (Object o : airline.getFlights()) {
+                  Flight f = (Flight) o;
+                  element.appendChild(getTR(f));
+                }
+                return;
+              }
+              if (airlineSearchSourceTextBox.getText().isEmpty()) {
+                addErrorStyle("airport-source-search-field");
+                return;
+              }
+              if (airlineSearchDestinationTextBox.getText().isEmpty()) {
+                addErrorStyle("airport-destination-search-field");
+                return;
+              }
               ArrayList<Flight> flights = new ArrayList<>();
               for (Object o : airline.getFlights()) {
                 Flight f = (Flight) o;
